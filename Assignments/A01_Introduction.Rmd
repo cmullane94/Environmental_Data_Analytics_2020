@@ -1,6 +1,6 @@
 ---
 title: "Assignment 1: Introduction"
-author: "Student Name"
+author: "Claire Mullaney"
 output: pdf_document
 geometry: margin=2.54cm
 ---
@@ -37,6 +37,6 @@ The completed exercise is due on Tuesday, January 14th at 1:00 pm.
 
 Provide a link below to your forked course repository in GitHub. Make sure you have pulled all recent changes from the course repository  and that you have updated your course README file. 
 
-> Answer: 
+> Answer: https://github.com/cmullane94/Environmental_Data_Analytics_2020
 
 
