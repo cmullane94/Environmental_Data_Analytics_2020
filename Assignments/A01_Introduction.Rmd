@@ -22,15 +22,15 @@ The completed exercise is due on Tuesday, January 14th at 1:00 pm.
 
 1. What are your previous experiences with data analytics, R, and Git? Include both formal and informal training.
 
-> Answer: In the spring of 2017 (my final semester of undergrad), I took a Statistics for the Life Sciences course in which we used some basic r to do statistical analyses. Last semester (Fall 2019), I took Applied Data Analysis for Environmental Sciences (ENV 710) and used r more intensively to complete weekly labs. Prior to going to graduate school, I held a position as a Resolution Analyst for a tech company that included heavy troubleshooting (although we did not use R).
+> Answer: In the spring of 2017 (my final semester of undergrad), I took a life sciences statistics course in which we used some basic R to do statistical analyses. Last semester (Fall 2019), I took Applied Data Analysis for Environmental Sciences (ENV 710) and used R more intensively to complete weekly labs. Prior to entering graduate school, I held a position as a resolution analyst that focused heavily on identifying, reproducing, and troubleshooting errors and bugs (although we did not use R).
 
 2. Are there any components of the course about which you feel confident?
 
-> Answer: In ENV 710, we covered generalized linear modeling thouroughly. I felt competent in this area at the end of the semester, and I am hopeful that I will be able to confidently build on these skills.
+> Answer: In ENV 710, we covered generalized linear modeling thoroughly. I felt competent in this area at the end of the semester, and I am hopeful that I will be able to confidently build on these skills. I also feel fairly comfortable visualizing data in R.
 
 3. Are there any components of the course about which you feel apprehensive?
 
-> Answer: I have some experience with data tidying in Excel, but it has been about four years since I have had to heavily manipulate data. I am looking forward to learning more about using this skill, but I am also apprehensive -- I feel like I have a lot to learn in this area.
+> Answer: I have a little experience with data tidying in Excel, but it has been about four years since I have had to do any raw data manipulation. I am looking forward to learning more about using this skill, but I am also apprehensive; I feel like I have a lot to learn in this area.
 
 
 ## 2) GitHub
