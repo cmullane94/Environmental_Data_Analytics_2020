@@ -1,6 +1,6 @@
 ---
 title: "Assignment 3: Data Exploration"
-author: "Student Name"
+author: "Claire Mullaney"
 output: pdf_document
 geometry: margin=2.54cm
 ---
@@ -23,25 +23,39 @@ The completed exercise is due on Tuesday, January 28 at 1:00 pm.
 
 1. Check your working directory, load necessary packages (tidyverse), and upload two datasets: the ECOTOX neonicotinoid dataset (ECOTOX_Neonicotinoids_Insects_raw.csv) and the Niwot Ridge NEON dataset for litter and woody debris (NEON_NIWO_Litter_massdata_2018-08_raw.csv). Name these datasets "Neonics" and "Litter", respectively. 
 ```{r,  message = FALSE}
+#Check working directory
+getwd()
 
+#Load necessary packages
+library(tidyverse)
+
+#Load datasets
+Neonics <- read.csv("./Data/Raw/ECOTOX_Neonicotinoids_Insects_raw.csv")
+
+Litter <- read.csv("./Data/Raw/NEON_NIWO_Litter_massdata_2018-08_raw.csv")
 ```
 
 ## Learn about your system
 
 2. The neonicotinoid dataset was collected from the Environmental Protection Agency's ECOTOX Knowledgebase, a database for ecotoxicology research. Neonicotinoids are a class of insecticides used widely in agriculture. The dataset that has been pulled includes all studies published on insects. Why might we be interested in the ecotoxicologoy of neonicotinoids on insects? Feel free to do a brief internet search if you feel you need more background information. 
 
-> Answer: 
+> Answer: Some insects play important ecosystem roles -- the first example that comes to mind are pollinators. If neonicotinoids are possibly harming beneficial insects and preventing them from effectively performing their jobs, these effects would need to be analyzed. From a quick search, it appears that there is evidence that, despite initial thoughts to the contrary, neonicotinoids are contributing to declines in bee populations.
 
 3. The Niwot Ridge litter and woody debris dataset was collected from the National Ecological Observatory Network, which collectively includes 81 aquatic and terrestrial sites across 20 ecoclimatic domains. 32 of these sites sample forest litter and woody debris, and we will focus on the Niwot Ridge long-term ecological research (LTER) station in Colorado. Why might we be interested in studying litter and woody debris that falls to the ground in forests? Feel free to do a brief internet search if you feel you need more background information. 
 
-> Answer: 
+> Answer: Litter and woody debris that falls to the ground in forests could be used to assess different element and chemical concentrations in litter and woody debris. These concentrations could possibly be indicators of overall forest health, and anomolies could be indicative of an unusual event that caused the litter to contain more of a specific compound or element (e.g., deposition of mercury from anthropogenic emissions). These debris could also be used to study ecological productivity, nutrient cycling, and soil fertility.
+
+From UserGuide: 
+Litterfall and fine woody debris data may be used to estimate annual Aboveground Net Primary Productivity (ANPP) and aboveground biomass at plot, site, and con􏰁nental scales. They also provide essen􏰁al data for un- derstanding vegeta􏰁ve carbon fluxes over 􏰁me.
+
 
 4. How is litter and woody debris sampled as part of the NEON network? Read the NEON_Litterfall_UserGuide.pdf document to learn more. List three pieces of salient information about the sampling methods here: 
 
 > Answer: 
-*
-*
-*
+*Elevated PVC li􏰀er trap design is consistent with that used by the Smithsonian Tropical Research Ins􏰁tute Center for Tropical Forest Science (STRI/CTFS) (Muller-Landau and Wright 2010). Each is a 0.5m2 square with mesh ‘basket’ elevated
+~80cm above the ground. Ground traps are 3 m x 0.5 m rectangular areas. 
+*In sites with forested tower airsheds, the li􏰀er sampling is targeted to take place in 20 40m x 40m plots. In sites with low-statured vegeta􏰁on over the tower airsheds, li􏰀er sampling is targeted to take place in 4 40m x 40m tower plots (to accommodate co-located soil sampling) plus 26 20m x 20m plots. One li􏰀er trap pair (one elevated trap and one ground trap) is deployed for every 400 m2 plot area, resul􏰁ng in 1-4 trap pairs per plot.
+*Ground traps are sampled once per year, while sampling of elevated traps depends on the vegetation that is present (deciduous forest sites are sampled once every 2 weeks during senescence and evergree sites are sampled once every 1-2 months; some deciduous sites or sites that are hard to access may not be sampled for up to 6 months over the winter).
 
 
 
@@ -50,39 +64,41 @@ The completed exercise is due on Tuesday, January 28 at 1:00 pm.
 5. What are the dimensions of the dataset?
 
 ```{r}
+#Dimensions of the Neonics dataset
+dim(Neonics)
 
 ```
 
 6. Using the `summary` function, determine the most common effects that are studied. Why might these effects specifically be of interest?
 ```{r}
+summary(Neonics$Effect)
 
 ```
 
-> Answer: 
+> Answer: The most common effects that are studied are population and mortality. While other negative effects would also be critical, the health and abundance of the population are ultimately most important; if many members of a species of insect are dying (mortality) or large scale population shifts/changes are occurring, these would most signal the need for intervention or management action, as they indicate that the most important functions performed by these insects cannot be performed.
 
 7. Using the `summary` function, determine the six most commonly studied species in the dataset (common name). What do these species have in common, and why might they be of interest over other insects? Feel free to do a brief internet search for more information if needed.
 
 ```{r}
-
+summary(Neonics$Species.Common.Name)
 ```
 
-> Answer: 
+> Answer: The six most commonly studied species in the data set are: Honey Bee, Parasitic Wasp, Buff Tailed Bumblebee, Carniolan Honey Bee, Bumble Bee, Italian Honeybee. These insects are all beneficial; the bees are pollinators, while the parasitic wasp helps control populations of insects that harm gardens and crops.
 
 8. Concentrations are always a numeric value. What is the class of Conc.1..Author. in the dataset, and why is it not numeric?
 
 ```{r}
-
+class(Neonics$Conc.1..Author.)
 ```
 
-> Answer:
-
-
+> Answer: The class of Conc.1..Author. in the dataset is a factor. Rather that viewing these concentrations as numerical values on which mathematical operations can be performed, this variable is meant to be a limited number of concentration levels that can be seen as categories or groups. In this case, it is more helpful to see how many studies used a specific concentration as opposed to mathematically manipulating those concentrations.
 
 ## Explore your data graphically (Neonics)
 
 9. Using `geom_freqpoly`, generate a plot of the number of studies conducted by publication year. 
-```{r}
 
+```{r}
+ggplot(Neonics) + geom_freqpoly(aes(x = Publication.Year)) + labs(x = "Publication Year", y = "Publication Count")
 ```
 
 10. Reproduce the same graph but now add a color aesthetic so that different Test.Location are displayed as different colors.
