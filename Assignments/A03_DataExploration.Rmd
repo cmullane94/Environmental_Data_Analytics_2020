@@ -98,26 +98,34 @@ class(Neonics$Conc.1..Author.)
 9. Using `geom_freqpoly`, generate a plot of the number of studies conducted by publication year. 
 
 ```{r}
-ggplot(Neonics) + geom_freqpoly(aes(x = Publication.Year)) + labs(x = "Publication Year", y = "Publication Count")
+ggplot(Neonics) + 
+  geom_freqpoly(aes(x = Publication.Year)) + 
+  labs(x = "Publication Year", y = "Publication Count")
 ```
 
 10. Reproduce the same graph but now add a color aesthetic so that different Test.Location are displayed as different colors.
 ```{r}
+ggplot(Neonics) + 
+  geom_freqpoly(aes(x = Publication.Year, color = Test.Location)) + 
+  labs(x = "Publication Year") +
+  theme(legend.position = "top") +
+  scale_color_discrete(name = "Test Location")
 
 ```
 
 Interpret this graph. What are the most common test locations, and do they differ over time?
 
-> Answer: 
+> Answer: The most common test locations are the lab and natural field environments. The number of experiments done in the lab matches the overall frequency of publications fairly closely, increasing from 1990 to about 2014, but it abruptly drops. The number of experiments done in the natural field increases starting in 1990, peaks in about 2009, and drops off from there.
 
 11. Create a bar graph of Endpoint counts. What are the two most common end points, and how are they defined? Consult the ECOTOX_CodeAppendix for more information. 
 
-```{r}
-
+```{r, fig.height = 3, fig.width = 7}
+ggplot(Neonics, aes(x = Endpoint)) + 
+  geom_bar()
 ```
 
-> Answer: 
->
+> Answer: The most common endpoint is NOEL. NOEL indicates that there is no-observable-effect-level; the highest concentration produces effects that are not significantly different from the responses of controls (according to author's reported statistical test). 
+> The second-most-common endpoint is LOEL. LOEL represents the category lowest-observable-effect-level; the lowest concentration produces effects that are significantly different from control responses.
 
 ## Explore your data (Litter)
 
