@@ -39,23 +39,21 @@ Litter <- read.csv("./Data/Raw/NEON_NIWO_Litter_massdata_2018-08_raw.csv")
 
 2. The neonicotinoid dataset was collected from the Environmental Protection Agency's ECOTOX Knowledgebase, a database for ecotoxicology research. Neonicotinoids are a class of insecticides used widely in agriculture. The dataset that has been pulled includes all studies published on insects. Why might we be interested in the ecotoxicologoy of neonicotinoids on insects? Feel free to do a brief internet search if you feel you need more background information. 
 
-> Answer: Some insects play important ecosystem roles -- the first example that comes to mind are pollinators. If neonicotinoids are possibly harming beneficial insects and preventing them from effectively performing their jobs, these effects would need to be analyzed. From a quick search, it appears that there is evidence that, despite initial thoughts to the contrary, neonicotinoids are contributing to declines in bee populations.
+> Answer: Some insects play important ecosystem roles and perform tasks cruicial to human health and survival -- for example, they pollinate flowers and crops. If neonicotinoids are possibly harming beneficial insects and preventing them from effectively completing these tasks, the impact of neonicotinoids on insect health would need to be studied. From a quick search, it appears that there is evidence that neonicotinoids are contributing to declines in bee populations, which would certainly cause scientists to devote resources to this area of study.
 
 3. The Niwot Ridge litter and woody debris dataset was collected from the National Ecological Observatory Network, which collectively includes 81 aquatic and terrestrial sites across 20 ecoclimatic domains. 32 of these sites sample forest litter and woody debris, and we will focus on the Niwot Ridge long-term ecological research (LTER) station in Colorado. Why might we be interested in studying litter and woody debris that falls to the ground in forests? Feel free to do a brief internet search if you feel you need more background information. 
 
-> Answer: Litter and woody debris that falls to the ground in forests could be used to assess different element and chemical concentrations in litter and woody debris. These concentrations could possibly be indicators of overall forest health, and anomolies could be indicative of an unusual event that caused the litter to contain more of a specific compound or element (e.g., deposition of mercury from anthropogenic emissions). These debris could also be used to study ecological productivity, nutrient cycling, and soil fertility.
-
-From UserGuide: 
-Litterfall and fine woody debris data may be used to estimate annual Aboveground Net Primary Productivity (ANPP) and aboveground biomass at plot, site, and con􏰁nental scales. They also provide essen􏰁al data for un- derstanding vegeta􏰁ve carbon fluxes over 􏰁me.
-
+> Answer: Litter and woody debris that fall to the ground in forests could be used to assess different element and chemical concentrations in the foliage. These concentrations could possibly be indicators of overall forest health, and anomolies or trends could be indicative of an event that caused the litter to contain more of a specific compound or element (e.g., deposition of mercury from anthropogenic emissions). These debris could also be used to study ecological productivity, nutrient and carbon cycling, and soil fertility.
 
 4. How is litter and woody debris sampled as part of the NEON network? Read the NEON_Litterfall_UserGuide.pdf document to learn more. List three pieces of salient information about the sampling methods here: 
 
 > Answer: 
-*Elevated PVC li􏰀er trap design is consistent with that used by the Smithsonian Tropical Research Ins􏰁tute Center for Tropical Forest Science (STRI/CTFS) (Muller-Landau and Wright 2010). Each is a 0.5m2 square with mesh ‘basket’ elevated
-~80cm above the ground. Ground traps are 3 m x 0.5 m rectangular areas. 
-*In sites with forested tower airsheds, the li􏰀er sampling is targeted to take place in 20 40m x 40m plots. In sites with low-statured vegeta􏰁on over the tower airsheds, li􏰀er sampling is targeted to take place in 4 40m x 40m tower plots (to accommodate co-located soil sampling) plus 26 20m x 20m plots. One li􏰀er trap pair (one elevated trap and one ground trap) is deployed for every 400 m2 plot area, resul􏰁ng in 1-4 trap pairs per plot.
-*Ground traps are sampled once per year, while sampling of elevated traps depends on the vegetation that is present (deciduous forest sites are sampled once every 2 weeks during senescence and evergree sites are sampled once every 1-2 months; some deciduous sites or sites that are hard to access may not be sampled for up to 6 months over the winter).
+
+>1. Litter and woody debris were collected using both elevated and ground traps. Elevated traps primarily catch litter, and each is a 0.5 m^2 square with a mesh basket elevated about 80 cm above the ground. Ground traps primarily catch woody debris, and each is 3 m x 0.5 m. 
+
+>2. Sampling occurs only in plots near towers. If the area near the tower is forested, litter sampling takes place in 20 40m x 40m plots. If the sites near the tower have low-statured vegetation, litter sampling occurs in 4 40m x 40m tower plots as well as 26 20m x 20m plots. One elevated trap and one ground trap are deployed for each 400 m^2 plot area.
+
+>3. Ground traps are sampled once per year, while sampling of elevated traps depends on the vegetation that is present (deciduous forest sites are sampled once every 2 weeks during senescence and evergreen sites are sampled once every 1-2 months; some deciduous sites or sites that are hard to access may not be sampled for up to 6 months over the winter).
 
 
 
@@ -71,11 +69,12 @@ dim(Neonics)
 
 6. Using the `summary` function, determine the most common effects that are studied. Why might these effects specifically be of interest?
 ```{r}
+#Determining the most commonly studied effects
 summary(Neonics$Effect)
 
 ```
 
-> Answer: The most common effects that are studied are population and mortality. While other negative effects would also be critical, the health and abundance of the population are ultimately most important; if many members of a species of insect are dying (mortality) or large scale population shifts/changes are occurring, these would most signal the need for intervention or management action, as they indicate that the most important functions performed by these insects cannot be performed.
+> Answer: The most common effects that are studied are population and mortality (the only two effects that are examined by over 1,000 publications). While it would be illuminating to study other effects as well, the health and abundance of insect populations are of ultimate importance; if many members of a species of insect are dying (mortality) or large scale population shifts/changes are occurring, these impacts would most definitively signal the need for action, as they indicate that these insects may not be able to continue providing their current services and benefits.
 
 7. Using the `summary` function, determine the six most commonly studied species in the dataset (common name). What do these species have in common, and why might they be of interest over other insects? Feel free to do a brief internet search for more information if needed.
 
@@ -83,15 +82,16 @@ summary(Neonics$Effect)
 summary(Neonics$Species.Common.Name)
 ```
 
-> Answer: The six most commonly studied species in the data set are: Honey Bee, Parasitic Wasp, Buff Tailed Bumblebee, Carniolan Honey Bee, Bumble Bee, Italian Honeybee. These insects are all beneficial; the bees are pollinators, while the parasitic wasp helps control populations of insects that harm gardens and crops.
+> Answer: The six most commonly studied species in the data set are: Honey Bee, Parasitic Wasp, Buff Tailed Bumblebee, Carniolan Honey Bee, Bumble Bee, Italian Honeybee. These insects are all beneficial in certain areas of the world (although a couple of them, the honey bee and the buff tailed bumblebee, have become invasive); the bees are pollinators, while the parasitic wasp helps control populations of insects that harm gardens and crops.
 
 8. Concentrations are always a numeric value. What is the class of Conc.1..Author. in the dataset, and why is it not numeric?
 
 ```{r}
+#Finding the class of Conc.1..Author.
 class(Neonics$Conc.1..Author.)
 ```
 
-> Answer: The class of Conc.1..Author. in the dataset is a factor. Rather that viewing these concentrations as numerical values on which mathematical operations can be performed, this variable is meant to be a limited number of concentration levels that can be seen as categories or groups. In this case, it is more helpful to see how many studies used a specific concentration as opposed to mathematically manipulating those concentrations.
+> Answer: The class of Conc.1..Author. in the dataset is a factor. Rather than viewing these concentrations as numerical values on which mathematical operations can be performed, this variable is meant to show a limited number of concentration levels that can be seen as categories or groups. In this specific dataset, it is more helpful to see how many studies use specific concentration levels (perhaps for the planning of future studies) as opposed to mathematically manipulating those concentrations.
 
 ## Explore your data graphically (Neonics)
 
@@ -100,7 +100,7 @@ class(Neonics$Conc.1..Author.)
 ```{r}
 ggplot(Neonics) + 
   geom_freqpoly(aes(x = Publication.Year)) + 
-  labs(x = "Publication Year", y = "Publication Count")
+  labs(x = "Publication Year", y = "Number of Publications")
 ```
 
 10. Reproduce the same graph but now add a color aesthetic so that different Test.Location are displayed as different colors.
@@ -115,7 +115,7 @@ ggplot(Neonics) +
 
 Interpret this graph. What are the most common test locations, and do they differ over time?
 
-> Answer: The most common test locations are the lab and natural field environments. The number of experiments done in the lab matches the overall frequency of publications fairly closely, increasing from 1990 to about 2014, but it abruptly drops. The number of experiments done in the natural field increases starting in 1990, peaks in about 2009, and drops off from there.
+> Answer: The most common test locations are the lab and natural field environments. The number of experiments done in the lab matches the overall frequency of publications fairly closely, increasing overall from 1990 to about 2014 (with some decreases also present during this time period), when it abruptly drops. The number of experiments done in the natural field increases and decreases in cycles starting from 1990 to about 2007, spikes in about 2009, and drops off from there.
 
 11. Create a bar graph of Endpoint counts. What are the two most common end points, and how are they defined? Consult the ECOTOX_CodeAppendix for more information. 
 
@@ -124,34 +124,36 @@ ggplot(Neonics, aes(x = Endpoint)) +
   geom_bar()
 ```
 
-> Answer: The most common endpoint is NOEL. NOEL indicates that there is no-observable-effect-level; the highest concentration produces effects that are not significantly different from the responses of controls (according to author's reported statistical test). 
-> The second-most-common endpoint is LOEL. LOEL represents the category lowest-observable-effect-level; the lowest concentration produces effects that are significantly different from control responses.
+> Answer: The most common endpoint is NOEL. NOEL indicates that there is no-observable-effect-level; the highest concentration of the administered chemical produces effects that are not significantly different from the responses of controls (according to the author's reported statistical test). 
+> The second-most-common endpoint is LOEL. LOEL represents the category lowest-observable-effect-level; the lowest concentration of the administered chemical produces effects that are significantly different from control responses.
 
 ## Explore your data (Litter)
 
 12. Determine the class of collectDate. Is it a date? If not, change to a date and confirm the new class of the variable. Using the `unique` function, determine which dates litter was sampled in August 2018. 
 ```{r}
-#checking the class of the data
+#Checking the class of the data
 class(Litter$collectDate)
 
-#collectDate is a factor; changing it to a date:
+#CollectDate is a factor; changing it to a date:
 Litter$collectDate <- as.Date(Litter$collectDate, format = "%Y-%m-%d")
 
-#confirming the new class of the data
+#Confirming the new class of the variable
 class(Litter$collectDate)
 
-#checking
+#Dates litter was sampled in August of 2018:
 unique(Litter$collectDate)
 ```
 
 13. Using the `unique` function, determine how many plots were sampled at Niwot Ridge. How is the information obtained from `unique` different from that obtained from `summary`?
 
 ```{r}
+#Comparing the `unique` and `summary` functions
 unique(Litter$plotID)
+
 summary(Litter$plotID)
 ```
 
-> Answer: There were 12 plots sampled at Niwot Ridge. When used on one column of a dataframe, `unique` eliminates duplicate values in a vector and returns one of each unique value, while `summary` returns each unique value along with its frequency in the vector.
+> Answer: There were 12 plots sampled at Niwot Ridge. When used on one column of a data frame, `unique` eliminates duplicate values in the column and returns one of each unique value, while `summary` returns each unique value along with its frequency in the column of data.
 
 14. Create a bar graph of functionalGroup counts. This shows you what type of litter is collected at the Niwot Ridge sites. Notice that litter types are fairly equally distributed across the Niwot Ridge sites.
 ```{r, fig.height = 3, fig.width = 4}
@@ -169,14 +171,14 @@ ggplot(Litter) +
 
 #Violin plot
 ggplot(Litter) + 
-  geom_violin(aes(x = functionalGfunctionalGroupss), draw_quantiles = c(0.25, 0.5, 0.75), scale = "count") + 
+  geom_violin(aes(x = functionalGroup, y = dryMass), draw_quantiles = c(0.25, 0.5, 0.75), scale = "count") + 
   labs(x = "Functional Group", y = "Dry Mass")
 ```
 
 Why is the boxplot a more effective visualization option than the violin plot in this case?
 
-> Answer: 
+> Answer: Because we are showing the dry mass within each of eight different functional groups, each individual violin plot does not show large enough probability frequencies to make the plots appear as anything much more than a line. The data would need to be divided into fewer groups for the probability frequency aspect of the violin plot to be informative.
 
-What typeBecause we are showing the dry mass within each of eight different functional groups, each individual violin plot does not show large enough probability frequencies to make the violin plots anything more than a line. The data would need to be divided into fewer groups for it to be useful.(s) of litter tend to have the highest biomass at these sites? 
+What type(s) of litter tend to have the highest biomass at these sites? 
 
-> Answer: Needles have the highest biomass, followed by mixed types of litter and twigs/branches (although there are some samples of woody material that individual have high masses).
+> Answer: Needles have the highest biomass, followed by mixed types of litter and twigs/branches (there are some individual samples of woody material that have relatively high dry mass, although woody material as a whole does not).
