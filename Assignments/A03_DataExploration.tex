@@ -174,7 +174,7 @@ The completed exercise is due on Tuesday, January 28 at 1:00 pm.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{#Check working directory}
+\CommentTok{# Check working directory}
 \KeywordTok{getwd}\NormalTok{()}
 \end{Highlighting}
 \end{Shaded}
@@ -185,10 +185,10 @@ The completed exercise is due on Tuesday, January 28 at 1:00 pm.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{#Load necessary packages}
+\CommentTok{# Load necessary packages}
 \KeywordTok{library}\NormalTok{(tidyverse)}
 
-\CommentTok{#Load datasets}
+\CommentTok{# Load datasets}
 \NormalTok{Neonics <-}\StringTok{ }\KeywordTok{read.csv}\NormalTok{(}\StringTok{"./Data/Raw/ECOTOX_Neonicotinoids_Insects_raw.csv"}\NormalTok{)}
 
 \NormalTok{Litter <-}\StringTok{ }\KeywordTok{read.csv}\NormalTok{(}\StringTok{"./Data/Raw/NEON_NIWO_Litter_massdata_2018-08_raw.csv"}\NormalTok{)}
@@ -214,7 +214,7 @@ The completed exercise is due on Tuesday, January 28 at 1:00 pm.
 
 \begin{quote}
 Answer: Some insects play important ecosystem roles and perform tasks
-cruicial to human health and survival -- for example, they pollinate
+crucial to human health and survival -- for example, they pollinate
 flowers and crops. If neonicotinoids are possibly harming beneficial
 insects and preventing them from effectively completing these tasks, the
 impact of neonicotinoids on insect health would need to be studied. From
@@ -242,7 +242,7 @@ cause scientists to devote resources to this area of study.
 Answer: Litter and woody debris that fall to the ground in forests could
 be used to assess different element and chemical concentrations in the
 foliage. These concentrations could possibly be indicators of overall
-forest health, and anomolies or trends could be indicative of an event
+forest health, and anomalies or trends could be indicative of an event
 that caused the litter to contain more of a specific compound or element
 (e.g., deposition of mercury from anthropogenic emissions). These debris
 could also be used to study ecological productivity, nutrient and carbon
@@ -319,7 +319,7 @@ Answer:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{#Dimensions of the Neonics dataset}
+\CommentTok{# Dimensions of the Neonics dataset}
 \KeywordTok{dim}\NormalTok{(Neonics)}
 \end{Highlighting}
 \end{Shaded}
@@ -339,7 +339,7 @@ Answer:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{#Determining the most commonly studied effects}
+\CommentTok{# Determining the most commonly studied effects}
 \KeywordTok{summary}\NormalTok{(Neonics}\OperatorTok{$}\NormalTok{Effect)}
 \end{Highlighting}
 \end{Shaded}
@@ -375,7 +375,7 @@ services and benefits.
 \tightlist
 \item
   Using the \texttt{summary} function, determine the six most commonly
-  studied species in the dataset (common name). What do these species
+  studied species in the data set (common name). What do these species
   have in common, and why might they be of interest over other insects?
   Feel free to do a brief internet search for more information if
   needed.
@@ -511,7 +511,7 @@ gardens and crops.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{#Finding the class of Conc.1..Author.}
+\CommentTok{# Finding the class of Conc.1..Author.}
 \KeywordTok{class}\NormalTok{(Neonics}\OperatorTok{$}\NormalTok{Conc.}\DecValTok{1}\NormalTok{..Author.)}
 \end{Highlighting}
 \end{Shaded}
@@ -546,17 +546,12 @@ concentrations.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{ggplot}\NormalTok{(Neonics) }\OperatorTok{+}\StringTok{ }
-\StringTok{  }\KeywordTok{geom_freqpoly}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Publication.Year)) }\OperatorTok{+}\StringTok{ }
-\StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{x =} \StringTok{"Publication Year"}\NormalTok{, }\DataTypeTok{y =} \StringTok{"Number of Publications"}\NormalTok{)}
+\KeywordTok{ggplot}\NormalTok{(Neonics) }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_freqpoly}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Publication.Year)) }\OperatorTok{+}\StringTok{ }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{x =} \StringTok{"Publication Year"}\NormalTok{, }
+    \DataTypeTok{y =} \StringTok{"Number of Publications"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
-\begin{verbatim}
-## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
-\end{verbatim}
-
-\includegraphics{A03_DataExploration_files/figure-latex/unnamed-chunk-6-1.pdf}
+\includegraphics{A03_DataExploration_files/figure-latex/unnamed-chunk-7-1.pdf}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -569,19 +564,12 @@ concentrations.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{ggplot}\NormalTok{(Neonics) }\OperatorTok{+}\StringTok{ }
-\StringTok{  }\KeywordTok{geom_freqpoly}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Publication.Year, }\DataTypeTok{color =}\NormalTok{ Test.Location)) }\OperatorTok{+}\StringTok{ }
-\StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{x =} \StringTok{"Publication Year"}\NormalTok{) }\OperatorTok{+}
-\StringTok{  }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{legend.position =} \StringTok{"top"}\NormalTok{) }\OperatorTok{+}
-\StringTok{  }\KeywordTok{scale_color_discrete}\NormalTok{(}\DataTypeTok{name =} \StringTok{"Test Location"}\NormalTok{)}
+\KeywordTok{ggplot}\NormalTok{(Neonics) }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_freqpoly}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Publication.Year, }\DataTypeTok{color =}\NormalTok{ Test.Location)) }\OperatorTok{+}\StringTok{ }
+\StringTok{    }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{x =} \StringTok{"Publication Year"}\NormalTok{) }\OperatorTok{+}\StringTok{ }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{legend.position =} \StringTok{"top"}\NormalTok{) }\OperatorTok{+}\StringTok{ }\KeywordTok{scale_color_discrete}\NormalTok{(}\DataTypeTok{name =} \StringTok{"Test Location"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
-\begin{verbatim}
-## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
-\end{verbatim}
-
-\includegraphics{A03_DataExploration_files/figure-latex/unnamed-chunk-7-1.pdf}
+\includegraphics{A03_DataExploration_files/figure-latex/unnamed-chunk-8-1.pdf}
 
 Interpret this graph. What are the most common test locations, and do
 they differ over time?
@@ -608,12 +596,11 @@ to about 2007, spikes in about 2009, and drops off from there.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{ggplot}\NormalTok{(Neonics, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Endpoint)) }\OperatorTok{+}\StringTok{ }
-\StringTok{  }\KeywordTok{geom_bar}\NormalTok{()}
+\KeywordTok{ggplot}\NormalTok{(Neonics, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Endpoint)) }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_bar}\NormalTok{()}
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{A03_DataExploration_files/figure-latex/unnamed-chunk-8-1.pdf}
+\includegraphics{A03_DataExploration_files/figure-latex/unnamed-chunk-9-1.pdf}
 
 \begin{quote}
 Answer: The most common endpoint is NOEL. NOEL indicates that there is
@@ -642,7 +629,7 @@ significantly different from control responses.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{#Checking the class of the data}
+\CommentTok{# Checking the class of the data}
 \KeywordTok{class}\NormalTok{(Litter}\OperatorTok{$}\NormalTok{collectDate)}
 \end{Highlighting}
 \end{Shaded}
@@ -653,10 +640,10 @@ significantly different from control responses.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{#CollectDate is a factor; changing it to a date:}
+\CommentTok{# CollectDate is a factor; changing it to a date:}
 \NormalTok{Litter}\OperatorTok{$}\NormalTok{collectDate <-}\StringTok{ }\KeywordTok{as.Date}\NormalTok{(Litter}\OperatorTok{$}\NormalTok{collectDate, }\DataTypeTok{format =} \StringTok{"%Y-%m-%d"}\NormalTok{)}
 
-\CommentTok{#Confirming the new class of the variable}
+\CommentTok{# Confirming the new class of the variable}
 \KeywordTok{class}\NormalTok{(Litter}\OperatorTok{$}\NormalTok{collectDate)}
 \end{Highlighting}
 \end{Shaded}
@@ -667,7 +654,7 @@ significantly different from control responses.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{#Dates litter was sampled in August of 2018:}
+\CommentTok{# Dates litter was sampled in August of 2018:}
 \KeywordTok{unique}\NormalTok{(Litter}\OperatorTok{$}\NormalTok{collectDate)}
 \end{Highlighting}
 \end{Shaded}
@@ -688,7 +675,7 @@ significantly different from control responses.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{#Comparing the `unique` and `summary` functions}
+\CommentTok{# Comparing the `unique` and `summary` functions}
 \KeywordTok{unique}\NormalTok{(Litter}\OperatorTok{$}\NormalTok{plotID)}
 \end{Highlighting}
 \end{Shaded}
@@ -732,13 +719,11 @@ data.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{ggplot}\NormalTok{(Litter, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ functionalGroup)) }\OperatorTok{+}\StringTok{ }
-\StringTok{  }\KeywordTok{geom_bar}\NormalTok{() }\OperatorTok{+}
-\StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{x =} \StringTok{"Functional Group"}\NormalTok{)}
+\KeywordTok{ggplot}\NormalTok{(Litter, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ functionalGroup)) }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_bar}\NormalTok{() }\OperatorTok{+}\StringTok{ }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{x =} \StringTok{"Functional Group"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{A03_DataExploration_files/figure-latex/unnamed-chunk-11-1.pdf}
+\includegraphics{A03_DataExploration_files/figure-latex/unnamed-chunk-12-1.pdf}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -751,36 +736,23 @@ data.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{#Boxplot}
-\KeywordTok{ggplot}\NormalTok{(Litter) }\OperatorTok{+}
-\StringTok{  }\KeywordTok{geom_boxplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ functionalGroup, }\DataTypeTok{y =}\NormalTok{ dryMass)) }\OperatorTok{+}
-\StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{x =} \StringTok{"Functional Group"}\NormalTok{, }\DataTypeTok{y =} \StringTok{"Dry Mass"}\NormalTok{)}
+\CommentTok{# Boxplot}
+\KeywordTok{ggplot}\NormalTok{(Litter) }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_boxplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ functionalGroup, }\DataTypeTok{y =}\NormalTok{ dryMass)) }\OperatorTok{+}\StringTok{ }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{x =} \StringTok{"Functional Group"}\NormalTok{, }
+    \DataTypeTok{y =} \StringTok{"Dry Mass"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{A03_DataExploration_files/figure-latex/unnamed-chunk-12-1.pdf}
+\includegraphics{A03_DataExploration_files/figure-latex/unnamed-chunk-13-1.pdf}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{#Violin plot}
-\KeywordTok{ggplot}\NormalTok{(Litter) }\OperatorTok{+}\StringTok{ }
-\StringTok{  }\KeywordTok{geom_violin}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ functionalGroup, }\DataTypeTok{y =}\NormalTok{ dryMass), }\DataTypeTok{draw_quantiles =} \KeywordTok{c}\NormalTok{(}\FloatTok{0.25}\NormalTok{, }\FloatTok{0.5}\NormalTok{, }\FloatTok{0.75}\NormalTok{), }\DataTypeTok{scale =} \StringTok{"count"}\NormalTok{) }\OperatorTok{+}\StringTok{ }
-\StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{x =} \StringTok{"Functional Group"}\NormalTok{, }\DataTypeTok{y =} \StringTok{"Dry Mass"}\NormalTok{)}
+\CommentTok{# Violin plot}
+\KeywordTok{ggplot}\NormalTok{(Litter) }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_violin}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ functionalGroup, }\DataTypeTok{y =}\NormalTok{ dryMass), }\DataTypeTok{draw_quantiles =} \KeywordTok{c}\NormalTok{(}\FloatTok{0.25}\NormalTok{, }
+    \FloatTok{0.5}\NormalTok{, }\FloatTok{0.75}\NormalTok{), }\DataTypeTok{scale =} \StringTok{"count"}\NormalTok{) }\OperatorTok{+}\StringTok{ }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{x =} \StringTok{"Functional Group"}\NormalTok{, }\DataTypeTok{y =} \StringTok{"Dry Mass"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
-\begin{verbatim}
-## Warning in regularize.values(x, y, ties, missing(ties)): collapsing to
-## unique 'x' values
-
-## Warning in regularize.values(x, y, ties, missing(ties)): collapsing to
-## unique 'x' values
-
-## Warning in regularize.values(x, y, ties, missing(ties)): collapsing to
-## unique 'x' values
-\end{verbatim}
-
-\includegraphics{A03_DataExploration_files/figure-latex/unnamed-chunk-12-2.pdf}
+\includegraphics{A03_DataExploration_files/figure-latex/unnamed-chunk-13-2.pdf}
 
 Why is the boxplot a more effective visualization option than the violin
 plot in this case?
@@ -790,8 +762,11 @@ Answer: Because we are showing the dry mass within each of eight
 different functional groups, each individual violin plot does not show
 large enough probability frequencies to make the plots appear as
 anything much more than a line. The data would need to be divided into
-fewer groups for the probability frequency aspect of the violin plot to
-be informative.
+fewer groups on the x-axis for the probability frequency aspect of the
+violin plot to be informative. Meanwhile, the boxplot shows additional
+information about the median, IQR, and outliers. This extra information,
+coupled with the absence of the probability frequency information in the
+violin plot, makes the boxplot more useful in this case.
 \end{quote}
 
 What type(s) of litter tend to have the highest biomass at these sites?
