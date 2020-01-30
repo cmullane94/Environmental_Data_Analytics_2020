@@ -20,6 +20,7 @@ getwd()
 library(plyr)
 library(tidyverse)
 library(lubridate)
+#When working with miultiple similar packages: identical functions in one package can mask those in another -- i.e., if you call a function, it will reference the function in one package over those in another. Make sure you load the packages in the correct order.
 NTL.phys.data.PeterPaul <- read.csv("./Data/Processed/NTL-LTER_Lake_ChemistryPhysics_PeterPaul_Processed.csv")
 NTL.nutrient.data <- read.csv("./Data/Raw/NTL-LTER_Lake_Nutrients_Raw.csv")
 ```
@@ -39,12 +40,19 @@ NTL.phys.data.PeterPaul$sampledate <- as.Date(NTL.phys.data.PeterPaul$sampledate
 # Select Peter and Paul Lakes from the nutrient dataset
 NTL.nutrient.data.PeterPaul <- filter(NTL.nutrient.data, lakename == "Paul Lake" | lakename == "Peter Lake")
 
+#Could also do with a pipe:
+NTL.nutrient.data.PeterPaul <- 
+  NTL.nutrient.data %>%
+  filter(lakename == "Paul Lake" | lakename == "Peter Lake") %>%
+  droplevels()
+
 # Data summaries for nutrient data
 colnames(NTL.nutrient.data.PeterPaul)
 dim(NTL.nutrient.data.PeterPaul)
 str(NTL.nutrient.data.PeterPaul)
 summary(NTL.nutrient.data.PeterPaul$lakename) 
 # Notice that other lake names didn't go away, even though they have zero values
+#removes empty levels
 NTL.nutrient.data.PeterPaul <- droplevels(NTL.nutrient.data.PeterPaul)
 summary(NTL.nutrient.data.PeterPaul$lakename)
 summary(NTL.nutrient.data.PeterPaul$comments)
@@ -70,6 +78,8 @@ NTL.nutrient.data.PeterPaul.subset <- select(NTL.nutrient.data.PeterPaul,
 
 # write a more succinct line of code to subset the nutrient dataset. 
 
+NTL.nutrient.data.PeterPaul.subset <- select(NTL.nutrient.data.PeterPaul, 
+                                             lakename:sampledate, depth:po4)
 ```
 
 
@@ -86,18 +96,20 @@ Note: `tidyr` is moving away from `gather` and `spread` and toward `pivot_longer
 
 ```{r}
 # Gather nutrient data into one column
-NTL.nutrient.data.PeterPaul.gathered <- gather(NTL.nutrient.data.PeterPaul.subset, "nutrient", "concentration", tn_ug:po4)
+NTL.nutrient.data.PeterPaul.gathered <- gather(NTL.nutrient.data.PeterPaul.subset, "nutrient", "concentration", tn_ug:po4) #The names of the existing columns will go in the nutrient column; the former values in those columns will be gathered into one concentration column
+
 NTL.nutrient.data.PeterPaul.gathered <- subset(NTL.nutrient.data.PeterPaul.gathered, !is.na(concentration))
 count(NTL.nutrient.data.PeterPaul.gathered, nutrient)
 
 write.csv(NTL.nutrient.data.PeterPaul.gathered, row.names = FALSE, 
           file = "./Data/Processed/NTL-LTER_Lake_Nutrients_PeterPaulGathered_Processed.csv")
 
-# Spread nutrient data into separate columns
+# Spread nutrient data into separate columns; should get us close to being back the dimensions of the original dataset
 NTL.nutrient.data.PeterPaul.spread <- spread(NTL.nutrient.data.PeterPaul.gathered, nutrient, concentration)
 
 # Split components of cells into multiple columns
 # Opposite of 'separate' is 'unite'
+#Will not preserve the initial colum
 NTL.nutrient.data.PeterPaul.dates <- separate(NTL.nutrient.data.PeterPaul.subset, sampledate, c("Y", "m", "d"))
 
 # I recommend using lubridate rather than separate and unite.
@@ -145,16 +157,20 @@ However, there are 20 months in this dataset, so importing all these files indiv
 ```{r}
 LitterFiles = list.files(path = "./Data/Raw/NIWO_Litter/", pattern="*.csv", full.names=TRUE)
 LitterFiles
+#Each file name has been stored as a value
+#If the files don't have the same column names, you will have to use a join function
 
 Litter <- LitterFiles %>%
-  ldply(read.csv)
+  ldply(read.csv) #Telling it to read anything that is a CSV in LitterFiles
 ```
 
 We also have information about individual traps, including the location and type of landcover. Let's join these two datasets. Note that "siteID", "plotID" and "trapID" exist in both datasets, and we can join them by these conditions. Notice the dimensions of the final dataset.
 ```{r}
 Trap <- read.csv("./Data/Raw/NEON_NIWO_Litter_trapdata_raw.csv")
 LitterTrap <- left_join(Litter, Trap, by = c("siteID", "plotID", "trapID"))
-
+#Will often give warning messages; don't always mean something is wrong
+#We are telling it to join all of the columns from Trap except for the ones that we are telling it to join by (siteID, plotID, and trapID will be merged)
+#If there are other columns that are identical across both and those columns are not specified in the join, both columns will be preserved (one will be called x and the other y)
 dim(Litter)
 dim(Trap)
 dim(LitterTrap)
@@ -182,6 +198,7 @@ NTL.PeterPaul.summaries <-
             sdTN = sd(tn_ug), 
             meanTP = mean(tp_ug), 
             sdTP = sd(tp_ug))
+#Taking out complete NAs and adding new columns by performing mathmatical operations on existing ones
 
 write.csv(NTL.PeterPaul.summaries, row.names = FALSE, 
           file ="./Data/Processed/NTL-LTER_Lake_Summaries_PeterPaul_Processed.csv")
