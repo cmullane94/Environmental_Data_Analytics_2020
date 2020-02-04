@@ -5,6 +5,10 @@ output: pdf_document
 geometry: margin=2.54cm
 ---
 
+```{r, include = FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+```
+
 ## OVERVIEW
 
 This exercise accompanies the lessons in Environmental Data Analytics on Data Wrangling 
@@ -80,15 +84,33 @@ class(EPAair_O3_NC2019$Date)
 class(EPAair_O3_NC2018$Date)
 
 #4
-#Selecting these columns from each dataset: Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE 
+#Selecting these columns from each dataset: Date, 
+#DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, 
+#COUNTY, SITE_LATITUDE, SITE_LONGITUDE 
 
-EPAair_PM25_NC2019_subset <- select(EPAair_PM25_NC2019, Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, COUNTY:SITE_LONGITUDE)
+EPAair_PM25_NC2019_subset <- select(EPAair_PM25_NC2019, 
+                                    Date, DAILY_AQI_VALUE, 
+                                    Site.Name, 
+                                    AQS_PARAMETER_DESC, 
+                                    COUNTY:SITE_LONGITUDE)
 
-EPAair_PM25_NC2018_subset <- select (EPAair_PM25_NC2018, Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, COUNTY:SITE_LONGITUDE)
+EPAair_PM25_NC2018_subset <- select (EPAair_PM25_NC2018, 
+                                     Date, DAILY_AQI_VALUE, 
+                                     Site.Name, 
+                                     AQS_PARAMETER_DESC, 
+                                     COUNTY:SITE_LONGITUDE)
 
-EPAair_O3_NC2019_subset <- select (EPAair_O3_NC2019, Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, COUNTY:SITE_LONGITUDE)
+EPAair_O3_NC2019_subset <- select (EPAair_O3_NC2019, 
+                                   Date, DAILY_AQI_VALUE, 
+                                   Site.Name, 
+                                   AQS_PARAMETER_DESC, 
+                                   COUNTY:SITE_LONGITUDE)
 
-EPAair_O3_NC2018_subset <- select (EPAair_O3_NC2018, Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, COUNTY:SITE_LONGITUDE)
+EPAair_O3_NC2018_subset <- select (EPAair_O3_NC2018, 
+                                   Date, DAILY_AQI_VALUE, 
+                                   Site.Name, 
+                                   AQS_PARAMETER_DESC, 
+                                   COUNTY:SITE_LONGITUDE)
 
 #5
 #Changing all values in the column AQS_PARAMETER_DESC to "PM2.5" by overwriting the original column
@@ -98,13 +120,17 @@ EPAair_PM25_NC2018_PM2.5 <- mutate(EPAair_PM25_NC2018_subset, AQS_PARAMETER_DESC
 
 #6
 #Saving processed CSVs
-write.csv(EPAair_PM25_NC2019_PM2.5, row.names = FALSE, file = "./Data/Processed/EPAair_PM25_NC2019_processed.csv")
+write.csv(EPAair_PM25_NC2019_PM2.5, row.names = FALSE, 
+          file = "./Data/Processed/EPAair_PM25_NC2019_processed.csv")
 
-write.csv(EPAair_PM25_NC2018_PM2.5, row.names = FALSE, file = "./Data/Processed/EPAair_PM25_NC2018_processed.csv")
+write.csv(EPAair_PM25_NC2018_PM2.5, row.names = FALSE, 
+          file = "./Data/Processed/EPAair_PM25_NC2018_processed.csv")
 
-write.csv(EPAair_O3_NC2019_subset, row.names = FALSE, file = "./Data/Processed/EPAair_O3_NC2019_processed.csv")
+write.csv(EPAair_O3_NC2019_subset, row.names = FALSE, 
+          file = "./Data/Processed/EPAair_O3_NC2019_processed.csv")
 
-write.csv(EPAair_O3_NC2018_subset, row.names = FALSE, file = "./Data/Processed/EPAair_O3_NC2018_processed.csv")
+write.csv(EPAair_O3_NC2018_subset, row.names = FALSE, 
+          file = "./Data/Processed/EPAair_O3_NC2018_processed.csv")
 
 
 ```
@@ -124,13 +150,23 @@ write.csv(EPAair_O3_NC2018_subset, row.names = FALSE, file = "./Data/Processed/E
 11. Save your processed dataset with the following file name: "EPAair_O3_PM25_NC1718_Processed.csv"
 
 ```{r}
-#7
-#Using `intersect` to find sites common among all four datasets
-##Because `intersect` only accepts two objects, common sites are first found separately for two pairs of data frames. 
-##The intersection between those collections of sites is then found to obtain the final list of sites that the four datasets have in common.
 
-EPA_PM25 <- rbind(EPAair_PM25_NC2019_PM2.5, EPAair_PM25_NC2018_PM2.5)
-EPA_O3 <- rbind(EPAair_O3_NC2019_subset, EPAair_O3_NC2018_subset)
+#7
+#Combining all dataframes
+EPA_PM25_O3 <- rbind(EPAair_PM25_NC2019_PM2.5, 
+                     EPAair_PM25_NC2018_PM2.5, 
+                     EPAair_O3_NC2019_subset, 
+                     EPAair_O3_NC2018_subset)
+
+#8
+#Using `intersect` to find sites common among 
+#all four datasets
+##Because `intersect` only accepts two objects, 
+##common sites are first found separately for 
+##two pairs of data frames. 
+##The intersection between those collections of 
+##sites is then found to obtain the final list 
+##of sites that the four datasets have in common.
 
 Int_PM25 <- intersect(EPAair_PM25_NC2019_PM2.5$Site.Name, EPAair_PM25_NC2018_PM2.5$Site.Name)
 
@@ -138,14 +174,14 @@ Int_O3 <- intersect(EPAair_O3_NC2019_subset$Site.Name, EPAair_O3_NC2018_subset$S
 
 intersect(Int_PM25, Int_O3)
 
-#Combining the two dataframes created above (each of which contains two of the original data frames, so all four data frames are now combined)
-EPA_PM25_O3 <- rbind(EPA_PM25, EPA_O3)
-
-#8
-
 #Creating a vector of the sites all the datasets have in common
 
-Filtered_sites <- c("Linville Falls", "Durham Armory", "Leggett", "Hattie Avenue", "Clemmons Middle", "Mendenhall School", "Frying Pan Mountain", "West Johnston Co.", "Garinger High School", "Castle Hayne", "Pitt Agri. Center", "Bryson City", "Millbrook School")
+Filtered_sites <- c("Linville Falls", "Durham Armory", "Leggett", 
+                    "Hattie Avenue", "Clemmons Middle", 
+                    "Mendenhall School", "Frying Pan Mountain", 
+                    "West Johnston Co.", "Garinger High School", 
+                    "Castle Hayne", "Pitt Agri. Center", 
+                    "Bryson City", "Millbrook School")
 
 #Using the pipe function to make the dataset fulfill the conditions above
 
@@ -160,17 +196,17 @@ EPA_combined <-
          Year = year(Date))
 
 #9
-#Spreading AQI mean values across columns for O3 and PM2.5
+#Spreading AQI daily mean values across columns for O3 and PM2.5
 EPA_combined_spread <- spread(EPA_combined, AQS_PARAMETER_DESC, DAILY_AQI_MEAN)
 
 #10
 #Checking the dimenstions of the new dataset
-
 dim(EPA_combined_spread)
 
 #11
 #Saving the processed file
-write.csv(EPA_combined_spread, row.names = FALSE, file = "./Data/Processed/EPAair_O3_PM25_NC1718_Processed.csv")
+write.csv(EPA_combined_spread, row.names = FALSE, 
+          file = "./Data/Processed/EPAair_O3_PM25_NC1718_Processed.csv")
 ```
 
 
@@ -190,11 +226,10 @@ EPA_combined_summary <-
 
 #13
 #Checking the dimenstions of the new dataset
-
 dim(EPA_combined_summary)
 
 ```
 
 14. Why did we use the function `drop_na` rather than `na.omit`?
 
-> Answer: `drop_na` is structured so that the first argument is a data frame and the second argument is a selection of comma-separated columns. This arrangement allows the function to easily fit into a pipe; as a part of the pipe formatting, the data frame argument can be dropped so that all that is needed is a list of columns. On the other hand, `na.omit` by itself cannot be used on more than one object; while it would work for dropping NAs from a data frame or a single column, it is not ideal for dropping NAs from multiple columns, and its argument structure does not allow it to fit as easily into a pipe as `drop_na` does.
+> Answer: `drop_na` is structured so that the first argument is a data frame and the second argument is a selection of columns. This arrangement allows the function to easily fit into a pipe; as a part of the pipe formatting, the data frame argument can be dropped so that all that is needed is a list of columns. On the other hand, `na.omit` by itself cannot easily be used on more than one object; while it would work for dropping NAs from a data frame or a single column, it is not ideal for dropping NAs from multiple columns, and its argument structure does not allow it to fit as easily into a pipe as `drop_na` does.
