@@ -1,6 +1,6 @@
 ---
 title: "Assignment 5: Data Visualization"
-author: "Student Name"
+author: "Claire Mullaney"
 output: pdf_document
 geometry: margin=2.54cm
 editor_options: 
@@ -29,9 +29,56 @@ The completed exercise is due on Tuesday, February 11 at 1:00 pm.
 
 ```{r}
 #1
+#Verifying directory, loading packages, and uploading files
+getwd()
 
+library(ggplot2)
+library(tidyverse)
+library(cowplot)
+
+
+Peter_Paul_Nutrients <- 
+  read.csv("./Data/Processed/NTL-LTER_Lake_Nutrients_PeterPaul_Processed.csv")
+Peter_Paul_Nutrients_Gathered <- 
+  read.csv("./Data/Processed/NTL-LTER_Lake_Nutrients_PeterPaulGathered_Processed.csv")
+Peter_Paul_ChemistryPhysics <-
+  read.csv("./Data/Processed/NTL-LTER_Lake_ChemistryPhysics_PeterPaul_Processed.csv")
+Niwot_Litter <- read.csv("./Data/Processed/NEON_NIWO_Litter_mass_trap_Processed.csv")
 
 #2
+#Looking at column names, checking the class of each date column, and converting those date columns to dates
+
+###Peter_Paul_Nutrients
+colnames(Peter_Paul_Nutrients)
+class(Peter_Paul_Nutrients$sampledate)
+
+Peter_Paul_Nutrients$sampledate <- 
+  as.Date(Peter_Paul_Nutrients$sampledate, 
+          format = "%Y-%m-%d")
+
+###Peter_Paul_Nutrients_Gathered
+colnames(Peter_Paul_Nutrients_Gathered)
+class(Peter_Paul_Nutrients_Gathered$sampledate)
+
+Peter_Paul_Nutrients_Gathered$sampledate <- 
+  as.Date(Peter_Paul_Nutrients_Gathered$sampledate, 
+          format = "%Y-%m-%d")
+
+###Peter_Paul_ChemistryPhysics
+colnames(Peter_Paul_ChemistryPhysics)
+class(Peter_Paul_ChemistryPhysics$sampledate)
+
+Peter_Paul_ChemistryPhysics$sampledate <- 
+  as.Date(Peter_Paul_ChemistryPhysics$sampledate, 
+          format = "%Y-%m-%d")
+
+###Niwot_Litter
+colnames(Niwot_Litter)
+class(Niwot_Litter$collectDate)
+
+Niwot_Litter$collectDate <- 
+  as.Date(Niwot_Litter$collectDate, 
+          format = "%Y-%m-%d")
 
 
 ```
@@ -49,7 +96,14 @@ For numbers 4-7, create ggplot graphs and adjust aesthetics to follow best pract
 4. [NTL-LTER] Plot total phosphorus by phosphate, with separate aesthetics for Peter and Paul lakes. Add a line of best fit and color it black. Adjust your axes to hide extreme values.
 
 ```{r}
+#need aesthetics and line of best fit
+#Labels?
+tp_vs_po4 <- ggplot(Peter_Paul_Nutrients, aes(y = tp_ug, x = po4)) +
+  geom_point() +
+  xlim(0, 50) +
+  ylim(0, 150)
 
+print(tp_vs_po4)
 
 
 ```
@@ -58,7 +112,30 @@ For numbers 4-7, create ggplot graphs and adjust aesthetics to follow best pract
 5. [NTL-LTER] Make three separate boxplots of (a) temperature, (b) TP, and (c) TN, with month as the x axis and lake as a color aesthetic. Then, create a cowplot that combines the three graphs. Make sure that only one legend is present and that graph axes are aligned.
 
 ```{r}
+#Change to a factor? Or change to a date above?
 
+#Converting month variables to factors so they can be used to break out the data in each boxplot
+Peter_Paul_ChemistryPhysics$month <- as.factor(Peter_Paul_ChemistryPhysics$month)
+
+Peter_Paul_Nutrients$month <- as.factor(Peter_Paul_Nutrients$month)
+
+#Constructing boxplots
+#Add lake as a color aesthetic
+Temp_box <- ggplot(Peter_Paul_ChemistryPhysics, 
+                   aes(y = temperature_C, x = month)) +
+  geom_boxplot()
+
+print(Temp_box)
+
+tp_box <- ggplot(Peter_Paul_Nutrients, aes(y = tp_ug, x = month)) +
+         geom_boxplot()
+print(tp_box)
+
+tn_box <- ggplot(Peter_Paul_Nutrients, aes(y = tn_ug, x = month)) +
+         geom_boxplot()
+print(tn_box)
+
+#Create a cowplot that combines the three graphs. Make sure that only one legend is present and that graph axes are aligned.
 
 ```
 
@@ -71,9 +148,20 @@ Question: What do you observe about the variables of interest over seasons and b
 7. [Niwot Ridge] Now, plot the same plot but with NLCD classes separated into three facets rather than separated by color. 
 
 ```{r}
+drymass_vs_date <- ggplot(subset(Niwot_Litter, 
+                                 functionalGroup == "Needles")) +
+  aes(y = dryMass, x = collectDate, color = nlcdClass) +
+  geom_point()
 
+print(drymass_vs_date)
 
+drymass_vs_date_fac <- ggplot(subset(Niwot_Litter, 
+                                     functionalGroup == "Needles")) +
+  aes(y = dryMass, x = collectDate) +
+  geom_point() +
+  facet_wrap(vars(nlcdClass))
 
+print(drymass_vs_date_fac)
 ```
 
 Question: Which of these plots (6 vs. 7) do you think is more effective, and why? 
