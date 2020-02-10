@@ -95,6 +95,20 @@ While the theme allows us to set multiple aspects of plots, ggplot allows us to 
 
 ```{r, fig.height = 3, fig.width = 4, warning = FALSE}
 O3plot7 <- ggplot(EPAair, aes(x = Date, y = Ozone)) +
+  geom_hline(yintercept = 50, lty = 2) + #adding horizontal lines at 50 & 100
+  geom_hline(yintercept = 100, lty = 2) +
+  geom_point(alpha = 0.5, size = 1.5) + #Making points 50% transparent and changing their size
+  geom_text(x = as.Date("2020-01-01"), y = 45, label = "good", hjust = 1, fontface = "bold") + #Specifying locations for a label based on an x and y value
+  geom_text(x = as.Date("2020-01-01"), y = 95, label = "moderate", hjust = 1, fontface = "bold") +
+  geom_text(x = as.Date("2020-01-01"), y = 120, label = "unhealthy (sensitive groups)", hjust = 1, fontface = "bold") +
+  scale_x_date(limits = as.Date(c("2018-01-01", "2019-12-31")), 
+    date_breaks = "2 months", date_labels = "%b %y") +
+  ylab(expression("O"[3]* " AQI Value")) +
+  theme(axis.text.x = element_text(angle = 45,  hjust = 1))
+print(O3plot7)  
+
+#Same code without comments -- trying to get the graph to show up
+O3plot7 <- ggplot(EPAair, aes(x = Date, y = Ozone)) +
   geom_hline(yintercept = 50, lty = 2) +
   geom_hline(yintercept = 100, lty = 2) +
   geom_point(alpha = 0.5, size = 1.5) +
@@ -152,9 +166,9 @@ nationalparkcolors (package)
 * https://github.com/katiejolly/nationalparkcolors
 
 ```{r, warning = FALSE}
-# install.packages("viridis")
-# install.packages("RColorBrewer")
-# install.packages("colormap")
+install.packages("viridis")
+install.packages("RColorBrewer")
+install.packages("colormap")
 library(viridis)
 library(RColorBrewer)
 library(colormap)
@@ -175,12 +189,14 @@ print(NvsP)
 NvsP2 <-
   ggplot(PeterPaul.chem.nutrients, aes(x = tp_ug, y = tn_ug, color = depth, shape = lakename)) +
   geom_point(alpha = 0.7, size = 2.5) +
-  #labs() + # change your legend labels here
+  labs(x = expression(paste("TP ( ", mu, "g/L)")), y = expression(paste("TN ( ", mu, "g/L)")), 
+       color = "Depth (m)", shape = "") + # change your legend labels here; can adjust all plot labels within "labs"
   scale_shape_manual(values = c(15, 17)) +
   #scale_color_distiller(palette = "Blues", direction = 1) + # use scale_color_brewer for discrete variables
   scale_color_viridis(option = "magma", direction = -1) +
   theme(legend.position = "right", 
         legend.text = element_text(size = 12), legend.title = element_text(size = 12))
+
 print(NvsP2)
 
 # change your y axis label to list concentration in micrograms per liter
@@ -190,7 +206,10 @@ print(NvsP2)
 Nutrientplot <-
   ggplot(PeterPaul.chem.nutrients.gathered, aes(x = lakename, y = concentration, color = nutrient)) +
   geom_boxplot() +
-# place your additional edits here
+  labs(x = "", y = (expression(paste("Concentration (", mu,
+                                     "g/L)")))) +
+  color_scale_discrete()+ #Specify legend labels here...why can't we do it the same way as above?
+        
   scale_y_continuous(expand = c(0, 0)) +
   #scale_color_brewer(palette = "YlGnBu") +
   #scale_color_manual(values = c("#7fcdbb", "#41b6c4", "#1d91c0", "#225ea8", "#0c2c84")) +

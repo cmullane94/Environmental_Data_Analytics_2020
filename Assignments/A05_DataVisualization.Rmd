@@ -42,7 +42,7 @@ Peter_Paul_Nutrients <-
 Peter_Paul_Nutrients_Gathered <- 
   read.csv("./Data/Processed/NTL-LTER_Lake_Nutrients_PeterPaulGathered_Processed.csv")
 Peter_Paul_ChemistryPhysics <-
-  read.csv("./Data/Processed/NTL-LTER_Lake_ChemistryPhysics_PeterPaul_Processed.csv")
+  read.csv("./Data/Processed/NTL-LTER_Lake_ChemistryPhysics_PeterPaul_Processed.csv") ### not
 Niwot_Litter <- read.csv("./Data/Processed/NEON_NIWO_Litter_mass_trap_Processed.csv")
 
 #2
@@ -87,7 +87,7 @@ Niwot_Litter$collectDate <-
 
 ```{r}
 
-
+#Can create a custom theme or use one that already exists
 ```
 
 ## Create graphs
