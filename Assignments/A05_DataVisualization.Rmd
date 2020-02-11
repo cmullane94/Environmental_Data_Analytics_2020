@@ -6,7 +6,9 @@ geometry: margin=2.54cm
 editor_options: 
   chunk_output_type: console
 ---
-
+```{r, include = FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+```
 ## OVERVIEW
 
 This exercise accompanies the lessons in Environmental Data Analytics on Data Visualization 
@@ -33,16 +35,16 @@ The completed exercise is due on Tuesday, February 11 at 1:00 pm.
 getwd()
 
 library(ggplot2)
+library(viridis)
+library(RColorBrewer)
 library(tidyverse)
 library(cowplot)
 
 
 Peter_Paul_Nutrients <- 
-  read.csv("./Data/Processed/NTL-LTER_Lake_Nutrients_PeterPaul_Processed.csv")
+  read.csv("./Data/Processed/NTL-LTER_Lake_Chemistry_Nutrients_PeterPaul_Processed.csv")
 Peter_Paul_Nutrients_Gathered <- 
   read.csv("./Data/Processed/NTL-LTER_Lake_Nutrients_PeterPaulGathered_Processed.csv")
-Peter_Paul_ChemistryPhysics <-
-  read.csv("./Data/Processed/NTL-LTER_Lake_ChemistryPhysics_PeterPaul_Processed.csv") ### not
 Niwot_Litter <- read.csv("./Data/Processed/NEON_NIWO_Litter_mass_trap_Processed.csv")
 
 #2
@@ -64,14 +66,6 @@ Peter_Paul_Nutrients_Gathered$sampledate <-
   as.Date(Peter_Paul_Nutrients_Gathered$sampledate, 
           format = "%Y-%m-%d")
 
-###Peter_Paul_ChemistryPhysics
-colnames(Peter_Paul_ChemistryPhysics)
-class(Peter_Paul_ChemistryPhysics$sampledate)
-
-Peter_Paul_ChemistryPhysics$sampledate <- 
-  as.Date(Peter_Paul_ChemistryPhysics$sampledate, 
-          format = "%Y-%m-%d")
-
 ###Niwot_Litter
 colnames(Niwot_Litter)
 class(Niwot_Litter$collectDate)
@@ -80,12 +74,16 @@ Niwot_Litter$collectDate <-
   as.Date(Niwot_Litter$collectDate, 
           format = "%Y-%m-%d")
 
-
 ```
 ## Define your theme
 3. Build a theme and set it as your default theme.
 
 ```{r}
+mytheme <- theme_classic(base_size = 12) +
+  theme(axis.text = element_text(color = "black"), 
+        legend.position = "right") +
+
+theme_set(mytheme)
 
 #Can create a custom theme or use one that already exists
 ```
@@ -96,12 +94,14 @@ For numbers 4-7, create ggplot graphs and adjust aesthetics to follow best pract
 4. [NTL-LTER] Plot total phosphorus by phosphate, with separate aesthetics for Peter and Paul lakes. Add a line of best fit and color it black. Adjust your axes to hide extreme values.
 
 ```{r}
-#need aesthetics and line of best fit
-#Labels?
-tp_vs_po4 <- ggplot(Peter_Paul_Nutrients, aes(y = tp_ug, x = po4)) +
+
+tp_vs_po4 <- ggplot(Peter_Paul_Nutrients, aes(y = tp_ug, x = po4, color = lakename)) +
   geom_point() +
+  geom_smooth(method=lm, se = FALSE, color = "black", size = 0.5) +
   xlim(0, 50) +
-  ylim(0, 150)
+  ylim(0, 150) +
+  labs(y = expression(paste("TP ( ", mu, "g/L)")), x = expression(paste("PO"[4]* " (", mu, "g/L)")), color = "Lake Name") +
+  scale_color_viridis(discrete = TRUE)
 
 print(tp_vs_po4)
 
@@ -112,58 +112,85 @@ print(tp_vs_po4)
 5. [NTL-LTER] Make three separate boxplots of (a) temperature, (b) TP, and (c) TN, with month as the x axis and lake as a color aesthetic. Then, create a cowplot that combines the three graphs. Make sure that only one legend is present and that graph axes are aligned.
 
 ```{r}
-#Change to a factor? Or change to a date above?
 
-#Converting month variables to factors so they can be used to break out the data in each boxplot
-Peter_Paul_ChemistryPhysics$month <- as.factor(Peter_Paul_ChemistryPhysics$month)
-
+#Converting month variables to factors (rather than numeric variables) so they can be used to break out the data in each boxplot
 Peter_Paul_Nutrients$month <- as.factor(Peter_Paul_Nutrients$month)
 
+Peter_Paul_Nutrients_Gathered$month <- as.factor(Peter_Paul_Nutrients_Gathered$month)
+
 #Constructing boxplots
-#Add lake as a color aesthetic
-Temp_box <- ggplot(Peter_Paul_ChemistryPhysics, 
-                   aes(y = temperature_C, x = month)) +
-  geom_boxplot()
 
-print(Temp_box)
+temp_box <- ggplot(Peter_Paul_Nutrients, 
+                   aes(y = temperature_C, x = month, 
+                       color = lakename)) +
+  geom_boxplot() + 
+  labs(y = "Temperature (C)", x = "Month", color = "Lake Name") +
+  scale_color_manual(values = c("#d7191c", "#2c7bb6"))
 
-tp_box <- ggplot(Peter_Paul_Nutrients, aes(y = tp_ug, x = month)) +
-         geom_boxplot()
+print(temp_box)
+##########
+tp_box <- ggplot(Peter_Paul_Nutrients, 
+                 aes(y = tp_ug, x = month, color = lakename)) +
+         geom_boxplot() + 
+  labs(y = expression(paste("TP ( ", mu, "g/L)")), 
+       x = "Month", color = "Lake Name") +
+  scale_color_manual(values = c("#d7191c", "#2c7bb6"))
+  
 print(tp_box)
+##########
+tn_box <- ggplot(Peter_Paul_Nutrients, 
+                 aes(y = tn_ug, x = month, color = lakename)) +
+         geom_boxplot() +
+    labs(y = expression(paste("TN ( ", mu, "g/L)")), x = "Month",
+         color = "Lake Name") +
+  scale_color_manual(values = c("#d7191c", "#2c7bb6"))
 
-tn_box <- ggplot(Peter_Paul_Nutrients, aes(y = tn_ug, x = month)) +
-         geom_boxplot()
 print(tn_box)
 
 #Create a cowplot that combines the three graphs. Make sure that only one legend is present and that graph axes are aligned.
+
+temp_tp_tn <- plot_grid(temp_box + theme(legend.position="none"), tp_box + theme(legend.position="none"), tn_box + theme(legend.position="none"), nrow = 3, align = "hv", rel_heights = c(1.25, 1))
+
+legend <- get_legend(temp_box + theme(legend.box.margin = margin(0, 0, 0, 12)))
+
+plot_grid(temp_tp_tn, legend, rel_widths = c(3, .4))
 
 ```
 
 Question: What do you observe about the variables of interest over seasons and between lakes? 
 
-> Answer: 
+> Answer: Median temperature and temperature ranges increase from May through August and decrease from September through November. Peter Lake consistently has lower median temperatures, and often wider temperature ranges, than Paul Lake (except in the month of October). The total amount of Nitrogen in the lake follows a similar pattern, with the median amount increasing for both lakes from May through August and starting to decrease in September. Peter Lake often has larger median amounts of nitrogen, a larger interquartile range, and more positively skewed than Paul Lake. The total amount of phosphorous in the lakes appears to increase from May through September. Peter Lake has higher median amounts of total phosphorus, and the distributions for Paul Lake are more positively skewed. There are many upper outliers in the distributions for both total nitrogen and total phosphorus in each month.
 
 6. [Niwot Ridge] Plot a subset of the litter dataset by displaying only the "Needles" functional group. Plot the dry mass of needle litter by date and separate by NLCD class with a color aesthetic. (no need to adjust the name of each land use)
 
 7. [Niwot Ridge] Now, plot the same plot but with NLCD classes separated into three facets rather than separated by color. 
 
 ```{r}
+#6
 drymass_vs_date <- ggplot(subset(Niwot_Litter, 
                                  functionalGroup == "Needles")) +
   aes(y = dryMass, x = collectDate, color = nlcdClass) +
-  geom_point()
+  geom_point() +
+  labs(y = "Dry Mass (g)", x = "Collection Date", color = "NLCD Class") +
+  scale_color_hue(labels = c("Evergreen Forest", "Grassland Herbaceous", "Shrub Scrub")) +
+  scale_color_viridis(discrete = TRUE)
 
 print(drymass_vs_date)
+
+#7
+nlcd_labels <- c(evergreenForest = "Evergreen Forest", grasslandHerbaceous = "Grassland Herbaceous", shrubScrub ="Shrub Scrub")
 
 drymass_vs_date_fac <- ggplot(subset(Niwot_Litter, 
                                      functionalGroup == "Needles")) +
   aes(y = dryMass, x = collectDate) +
   geom_point() +
-  facet_wrap(vars(nlcdClass))
+  facet_wrap(vars(nlcdClass), labeller = as_labeller(nlcd_labels)) +
+  labs(y = "Dry Mass (g)", x = "Collection Date")
+
 
 print(drymass_vs_date_fac)
 ```
 
 Question: Which of these plots (6 vs. 7) do you think is more effective, and why? 
 
-> Answer: 
+> Answer: I think plot 6 is more effective. I find it easier to compare all three NLCD classes within each year when the points are all on the same graph and separated by color. When each NLCD class is a different section of the faceted graph, scanning the graph to compare these different classes within years is challenging. Even though there is no need to separate the classes by color because they are on separate graphs, the lack of a clear visual distinction among the points makes comparing the different classes difficult.
