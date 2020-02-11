@@ -120,10 +120,15 @@ print(tp_vs_po4)
 
 ```{r}
 
+#Converting month variables to factors (rather than integers)
+#so they can be used to discretely break out the data in each boxplot
+
+Peter_Paul_Nutrients$month <- as.factor(Peter_Paul_Nutrients$month)
+
 #Constructing boxplots
 
 temp_box <- ggplot(Peter_Paul_Nutrients, 
-                   aes(y = temperature_C, x = as.factor(month), 
+                   aes(y = temperature_C, x = month, 
                        color = lakename)) +
   geom_boxplot() + 
   labs(y = expression("Temp " (degree~C)), x = "Month", color = "Lake Name") +
@@ -132,8 +137,7 @@ temp_box <- ggplot(Peter_Paul_Nutrients,
 print(temp_box)
 ##########
 tp_box <- ggplot(Peter_Paul_Nutrients, 
-                 aes(y = tp_ug, x = as.factor(month), 
-                     color = lakename)) +
+                 aes(y = tp_ug, x = month, color = lakename)) +
          geom_boxplot() + 
   labs(y = expression(paste("TP ( ", mu, "g/L)")), 
        x = "Month", color = "Lake Name") +
@@ -142,8 +146,7 @@ tp_box <- ggplot(Peter_Paul_Nutrients,
 print(tp_box)
 ##########
 tn_box <- ggplot(Peter_Paul_Nutrients, 
-                 aes(y = tn_ug, x = as.factor(month), 
-                     color = lakename)) +
+                 aes(y = tn_ug, x = month, color = lakename)) +
          geom_boxplot() +
     labs(y = expression(paste("TN ( ", mu, "g/L)")), x = "Month",
          color = "Lake Name") +
@@ -159,9 +162,7 @@ temp_tp_tn <- plot_grid(temp_box + theme(legend.position="none"),
                         tn_box + theme(legend.position="none"), 
                         nrow = 3, align = "hv")
 
-legend <- get_legend(temp_box + 
-                       guides(color = guide_legend(nrow = 1)) + 
-                       theme(legend.position = "bottom"))
+legend <- get_legend(temp_box + guides(color = guide_legend(nrow = 1)) + theme(legend.position = "bottom"))
 
 plot_grid(temp_tp_tn, legend, ncol = 1, rel_heights = c(1, .1))
 
@@ -169,7 +170,7 @@ plot_grid(temp_tp_tn, legend, ncol = 1, rel_heights = c(1, .1))
 
 Question: What do you observe about the variables of interest over seasons and between lakes? 
 
-> Answer: Median temperature and temperature interquartile ranges (IQRs) increase from May through August and decrease from September through November. Peter Lake consistently has lower median temperatures, and often wider temperature IQRs, than Paul Lake (except in the month of October). The total amount of nitrogen in the lakes follows a similar pattern, with the median amount slightly increasing for both lakes from May through August and starting to decrease in September. Peter Lake often has larger median amounts of nitrogen, larger IQRs, and more positive skew than Paul Lake. Unlike temperature and total nitrogen, the median total amount of phosphorus in the lakes appears to increase from May all the way through September, the last month for which there is data. This increase is more prominent for Peter Lake, which also has higher median amounts of total phosphorus and larger IQRs. The distributions of total amounts of phosphorus for Paul Lake appear to be more positively skewed for any given month. For both Peter and Paul lake, there are many positive outliers in the distributions for both total nitrogen and total phosphorus in each month. 
+> Answer: Median temperature and temperature interquartile ranges (IQRs) increase from May through August and decrease from September through November. Peter Lake consistently has lower median temperatures, and often wider temperature IQRs, than Paul Lake (except in the month of October). The total amount of nitrogen in the lakes follows a similar pattern, with the median amount slightly increasing for both lakes from May through August and starting to decrease in September. Peter Lake often has larger median amounts of nitrogen, larger IQRs, and more positive skew than Paul Lake. Unlike temperature and total nitrogen, the total amount of phosphorus in the lakes appears to increase from May all the way through September, the last month for which there is data. This increase is more prominent for Peter Lake, which also has higher median amounts of total phosphorus and larger IQRs. The distributions of total amounts of phosphorus for Paul Lake are more positively skewed for any given month. For both Peter and Paul lake, there are many positive outliers in the distributions for both total nitrogen and total phosphorus in each month.
 
 6. [Niwot Ridge] Plot a subset of the litter dataset by displaying only the "Needles" functional group. Plot the dry mass of needle litter by date and separate by NLCD class with a color aesthetic. (no need to adjust the name of each land use)
 
@@ -183,24 +184,32 @@ drymass_vs_date <- ggplot(subset(Niwot_Litter,
   aes(y = dryMass, x = collectDate, color = nlcdClass) +
   geom_point() +
   labs(y = "Dry Mass (g)", x = "Collection Date", color = "NLCD Class") +
-   scale_color_viridis(discrete = TRUE)
+   scale_color_viridis(discrete = TRUE, 
+                       labels = c("Evergreen Forest", 
+                                  "Grassland Herbaceous", 
+                                  "Shrub Scrub"))
+ 
 
 print(drymass_vs_date)
 
 #7
 #Faceted graph
+#Created labels for each facet
+nlcd_labels <- c(evergreenForest = "Evergreen Forest",
+                 grasslandHerbaceous = "Grassland Herbaceous", 
+                 shrubScrub ="Shrub Scrub")
 
 drymass_vs_date_fac <- ggplot(subset(Niwot_Litter, 
-                                     functionalGroup ==
-                                       "Needles")) +
+                                     functionalGroup == "Needles")) +
   aes(y = dryMass, x = collectDate) +
   geom_point() +
-  facet_wrap(vars(nlcdClass), nrow = 3) +
+  facet_wrap(vars(nlcdClass), labeller = as_labeller(nlcd_labels), nrow = 3) +
   labs(y = "Dry Mass (g)", x = "Collection Date")
+
 
 print(drymass_vs_date_fac)
 ```
 
 Question: Which of these plots (6 vs. 7) do you think is more effective, and why? 
 
-> Answer: I think plot 7 is more effective; when facet_wrap is used to create three individual graphs (one for each NLCD class), each in its own row, it is easy to see the dry masses of each NLCD type within any given year. These dry masses can be efficiently compared both across classes (by looking at a vertical segment of all three plots) and across years (by looking at each individual graph). In plot 6, even though the NLCD classes are separated by color, it is harder to collectively see the dry masses of each individual NLCD class for any given date range. While this difficulty does not result in comparisons across classes within a given date range being terribly cumbersome (although overlap in some data points does make these comparisons a bit more challenging than with plot 7), it does make examining changes in dry mass for one individual class across all years much more difficult in plot 6 than plot 7.
+> Answer: I think plot 7 is more effective; when facet_wrap is used to create three individual graphs (one for each NLCD class), each in its own row, it is easy to see the dry masses of each NLCD type within any given year. These dry masses can be efficiently compared both across classes (by looking at a vertical segment of all three plots) and across years (by looking at each individual graph). In plot 6, even though the NLCD classes are separated by color, it is harder to collectively see the dry masses of each individual NLCD class for any given date range. While this difficulty does not result in comparisons across classes within a given year being terribly cumbersome (although overlap in some data points does make these comparisons a bit more challenging than with plot 7), it does make examining changes in dry mass for one individual class across all years much more difficult in plot 6 than plot 7.

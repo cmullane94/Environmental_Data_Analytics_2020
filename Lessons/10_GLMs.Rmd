@@ -75,8 +75,8 @@ O3.onesample <- t.test(EPAair$Ozone, mu = 50, alternative = "less")
 O3.onesample
 
 Ozone.plot <- ggplot(EPAair, aes(x = Ozone)) +
-  #geom_density(stat = "count", fill = "gray") +
-  geom_density(fill = "gray") +
+  geom_density(stat = "count", fill = "gray") +
+  #geom_density(fill = "gray") +
   geom_vline(xintercept = 50, color = "#238b45", lty = 2, size = 0.9) +
   scale_x_continuous(expand = c(0, 0)) + scale_y_continuous(expand = c(0, 0))
 print(Ozone.plot)
@@ -130,6 +130,14 @@ Create three plots, each with appropriately formatted axes and legends. Choose a
 
 ```{r}
 
+ggplot(EPAair, aes(x = Ozone)) +
+  geom_density()
+
+ggplot(EPAair, aes(x = Ozone)) +
+  geom_boxplot()
+
+ggplot(EPAair, aes(y = Ozone, x = as.factor(Year))) +
+  geom_violin()
 
 ```
 
