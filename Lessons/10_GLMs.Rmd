@@ -84,7 +84,7 @@ print(Ozone.plot)
 
 Write a sentence or two about the results of this test. Include both the results of the test and an interpretation that puts the findings in context of the resarch question.
 
-> 
+> We reject the null hypothesis -- the true mean is less than 50
 
 ### Two-sample t-test
 The two-sample *t* test is used to test the hypothesis that the mean of two samples is equivalent. Unlike the one-sample tests, a two-sample test requires a second assumption that the variance of the two groups is equivalent. Are Ozone levels different between 2018 and 2019?
@@ -92,7 +92,7 @@ The two-sample *t* test is used to test the hypothesis that the mean of two samp
 ```{r}
 shapiro.test(EPAair$Ozone[EPAair$Year == 2018])
 shapiro.test(EPAair$Ozone[EPAair$Year == 2019])
-var.test(EPAair$Ozone ~ EPAair$Year)
+var.test(EPAair$Ozone ~ EPAair$Year) #true rationis not equal to one
 
 ggplot(EPAair, aes(x = Ozone, color = as.factor(Year))) +
   geom_freqpoly()
@@ -100,7 +100,7 @@ ggplot(EPAair, aes(x = Ozone, color = as.factor(Year))) +
 # Format as a t-test
 O3.twosample <- t.test(EPAair$Ozone ~ EPAair$Year)
 O3.twosample
-O3.twosample$p.value
+O3.twosample$p.value # < 0.05 -- the true mean is not equal to zero
 
 # Format as a GLM
 O3.twosample2 <- lm(EPAair$Ozone ~ EPAair$Year)
