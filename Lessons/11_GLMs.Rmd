@@ -61,23 +61,34 @@ qqnorm(Litter.Totals$dryMass); qqline(Litter.Totals$dryMass)
 # Test for equal variance
 # ANOVA is robust against departures from equal variance.
 bartlett.test(Litter.Totals$dryMass ~ Litter.Totals$plotID)
+#Reject null hypotheses that variances are equal
 
 # Format ANOVA as aov
 Litter.Totals.anova <- aov(data = Litter.Totals, dryMass ~ plotID)
 summary(Litter.Totals.anova)
 
 # Format ANOVA as lm
+#The intercept is plotIDNIWO_041; significances are measured against that plot
+#Overall p-value given
 Litter.Totals.anova2 <- lm(data = Litter.Totals, dryMass ~ plotID)
 summary(Litter.Totals.anova2)
 
 # Checking model fit and assumptions
 # ANOVA is robust against departures from normality.
+##Residuals vs. Fitted -- looking for a straight line
+##Normal Q-Q -- want points to fit the line
+##Scale-Location -- looking for a straight line
+##Residuals vs. Leverage -- outliers
 plot(Litter.Totals.anova2)
 
 # Post-hoc test
+#Pairwise comparisons
+#Run on aov object, not lm object?
 TukeyHSD(Litter.Totals.anova)
 
 # Extract groupings for pairwise relationships
+#Still use aov object
+#Specify predictor variable
 Litter.Totals.groups <- HSD.test(Litter.Totals.anova, "plotID", group = TRUE)
 Litter.Totals.groups
 
@@ -85,7 +96,8 @@ Litter.Totals.groups
 Litter.Totals.plot <- ggplot(Litter.Totals, aes(x = plotID, y = dryMass)) +
   geom_boxplot() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-  stat_summary(geom = "text", fun.y = max, vjust = -1, size = 3.5,
+  stat_summary(geom = "text", fun.y = max, vjust = -1, 
+               size = 3.5,
                label = c("abc", "ab", "abcd", "bcd", "bcd", "a", 
                          "d", "abcd", "cd", "d", "abcd", "abcd")) +
   labs(x = "Plot ID", y = "Dry Mass (g)") +
@@ -93,9 +105,9 @@ Litter.Totals.plot <- ggplot(Litter.Totals, aes(x = plotID, y = dryMass)) +
 print(Litter.Totals.plot)
 ```
 
-What information does the output give us? How might we report this information in a report?
+What information does the output give us? How might we report this information in a report? 
 
-> 
+> Total litter biomass differs significantly among sites at the Niwot Ridge LTER (figure 1; ANOVA, F11, 198 = 4.813, p < 0.0001).
 
 
 ### Non-parametric equivalent of ANOVA: Kruskal-Wallis Test
@@ -125,6 +137,7 @@ Litter.anova.2way <- aov(data = Litter, dryMass ~ functionalGroup + nlcdClass)
 summary(Litter.anova.2way)
 
 # Format as lm
+#Intercept is first functional group and land use class alphabetically
 Litter.anova.2way2 <- lm(data = Litter, dryMass ~ functionalGroup + nlcdClass)
 summary(Litter.anova.2way2)
 
@@ -164,7 +177,14 @@ Litter.groups
 # Edit this graph to make it more visually appealing.
 # Add letters to represent statistical groupings.
 Litter.anova.plot <- ggplot(Litter, aes(y = dryMass, x = nlcdClass, color = functionalGroup)) +
-  geom_boxplot()
+  geom_boxplot() + 
+  labs(y = "Dry Mass", x = "NLCD Class", color = "Functional Group") +
+  scale_x_discrete(labels = c("Evergreen Forest", "Herbaceous Grassland", "Shrub Scrub")) +
+  stat_summary(geom = "text", fun.y = max, vjust = -1, 
+               size = 3.5,
+               label = c("d", "d", "d", "a", "d", "d", 
+                         "d", "d", "d", "d", "d", "b", "d", "d", "d", "d",
+                         "d", "d", "cd", "bc", "d", "d", "d", "d"))
 print(Litter.anova.plot)
 
 ```
