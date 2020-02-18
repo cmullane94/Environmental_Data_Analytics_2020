@@ -18,6 +18,7 @@ editor_options:
 getwd()
 library(tidyverse)
 options(scipen = 4)
+###From the help menion: "integer. A penalty to be applied when deciding to print numeric values in fixed or exponential notation. Positive values bias towards fixed and negative towards scientific notation: fixed notation will be preferred unless it is more than scipen digits wider."
 
 PeterPaul.chem.nutrients <- read.csv("./Data/Processed/NTL-LTER_Lake_Chemistry_Nutrients_PeterPaul_Processed.csv")
 
@@ -56,7 +57,7 @@ cor.test(PeterPaul.chem.nutrients$irradianceWater, PeterPaul.chem.nutrients$dept
 ```
 Question: How would you report the results of this test (overall findings and report of statistical output)?
 
->  
+>  For each meter of additional depth, irradiance decreases by -95.890 units.
 
 So, we see there is a significant negative correlation between irradiance and depth (lower light levels at greater depths), and that this model explains about 31 % of the total variance in irradiance. Let's visualize this relationship and the model itself. 
 
@@ -176,6 +177,10 @@ Paul.naomit <- PeterPaul.chem.nutrients %>%
 TPAIC <- lm(data = Paul.naomit, tp_ug ~ depth + dissolvedOxygen + 
               temperature_C + tn_ug + po4)
 step(TPAIC)
+#Automatically emoves variables until the lowest AIC is obtained
+#How does it know which variable to remove?
+
+#Running the best model to obtain F statistics, p values, etc.
 TPmodel <- lm(data = Paul.naomit, tp_ug ~ dissolvedOxygen + temperature_C + tn_ug)
 summary(TPmodel)
 
