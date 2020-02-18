@@ -42,8 +42,9 @@ Peter_Paul_Nutrients <-
   read.csv("./Data/Processed/NTL-LTER_Lake_Nutrients_PeterPaul_Processed.csv")
 
 #2
-#Looking at column names and date format
+#Looking at initial column names and date format
 head(Peter_Paul_Nutrients)
+class(Peter_Paul_Nutrients$sampledate)
 
 #Changing column sampledate to a date format
 Peter_Paul_Nutrients$sampledate <- as.Date(Peter_Paul_Nutrients$sampledate, format = "%Y-%m-%d")
@@ -64,6 +65,9 @@ Peter_Paul_Nutrients_wr <-
          depth == 0 & 
            year4 >= 1993 & 
            year4 <= 1996)
+
+Peter_Paul_Nutrients_wr$month <- as.factor(Peter_Paul_Nutrients_wr$month)
+class(Peter_Paul_Nutrients_wr$month)
 ```
 
 ## Analysis
@@ -72,44 +76,59 @@ Peter Lake was manipulated with additions of nitrogen and phosphorus over the ye
 
 4. Which application of the GLM will you use (t-test, one-way ANOVA, two-way ANOVA with main effects, or two-way ANOVA with interaction effects)? Justify your choice.
 
-> Answer: I will use a two-way ANOVA with interaction effects to account for the possibility that one of the explanatory variables depends on or affects the other. For example, if one of the lakes were in the sun and one were in the shade, levels of nitrogen or phosphorus could be partially predicted by the interaction between the lake and season variables.
+> Answer: I will use a two-way ANOVA with interaction effects. We have two continuous response variables (TN and TP), each of which is being examined separately as the effect of two categorical explanatory variables, lake name and month; when two categorical variables are used as explanatory variables for a continuous response variable, a two-way ANOVA must be used in the analysis. I will consider interaction effects to account for the possibility that one of the explanatory variables depends on or affects the other. For example, if one of the lakes was in the sun and one was in the shade, levels of nitrogen or phosphorus could potentially be partially predicted by the interaction between the lake and season variables.
 
 5. Run your test for TN. Include examination of groupings and consider interaction effects, if relevant.
 
 6. Run your test for TP. Include examination of groupings and consider interaction effects, if relevant.
 
 ```{r}
-#For number 5: run lm, aov, and then stop because nothing is significant. We chose to do a 2-way anova with interactions, so we have to stop after that without any post-hoc tests.
-
 #5 Test for tn
 ##As linear model
-tn.anova.2way.int <- lm(data = Peter_Paul_Nutrients_wr, tn_ug ~ lakename * as.factor(month))
+tn.anova.2way.int <- lm(data = Peter_Paul_Nutrients_wr, 
+                        tn_ug ~ lakename * month)
 summary(tn.anova.2way.int)
 
 ##As aov
-tn.anova.2way.aov <- aov(data = Peter_Paul_Nutrients_wr, tn_ug ~ lakename * as.factor(month))
+tn.anova.2way.aov <- aov(data = Peter_Paul_Nutrients_wr, 
+                         tn_ug ~ lakename * month)
 summary(tn.anova.2way.aov)
 
+##TukeyHSD post-hoc test for pairwise differences to confirm ANOVA results
 TukeyHSD(tn.anova.2way.aov)
 
-###No significant interactions; no need to form groups
+###No significant interactions; only lakename has significant differences
+##No need to form groups
 
 #6 Test for tp
 ##As linear model
-tp.anova.2way.int <- lm(data = Peter_Paul_Nutrients_wr, tp_ug ~ lakename * as.factor(month))
+tp.anova.2way.int <- lm(data = Peter_Paul_Nutrients_wr, 
+                        tp_ug ~ lakename * month) 
 summary(tp.anova.2way.int)
 
-##Creating an interaction as a separate variable and formatting as an aov
-tp.interaction <- with(Peter_Paul_Nutrients_wr, interaction(lakename, as.factor(month)))
-                       
-tp.anova.2way.aov <- aov(data = Peter_Paul_Nutrients_wr, tp_ug ~ tp.interaction)
+##As aov
+tp.anova.2way.aov <- aov(data = Peter_Paul_Nutrients_wr, 
+                         tp_ug ~ lakename * month) 
 summary(tp.anova.2way.aov)
 
-##TukeyHSD post-hoc test for pairwise differences
+##TukeyHSD post-hoc test for pairwise differences to confirm ANOVA results
 TukeyHSD(tp.anova.2way.aov)
 
+##Some of the interactions, along with lakenames, are significantly different from
+##each other; creating groups to more easily interpret statistical differences
+
+##Creating an interaction as a separate variable and formatting as an aov
+##to group interaction data
+tp.interaction <- with(Peter_Paul_Nutrients_wr, 
+                       interaction(lakename, month))
+                       
+tp.anova.2way.aov2 <- aov(data = Peter_Paul_Nutrients_wr, 
+                          tp_ug ~ tp.interaction)
+summary(tp.anova.2way.aov2)
+
 ##Groups
-tp.groups <- HSD.test(tp.anova.2way.aov, trt = "tp.interaction", group = TRUE)
+tp.groups <- HSD.test(tp.anova.2way.aov2, trt = "tp.interaction", 
+                      group = TRUE)
 tp.groups
 ```
 
@@ -119,22 +138,42 @@ tp.groups
 
 ```{r}
 #7
+#Defining a new theme
+theme_def <- theme_classic(base_size = 14) +
+  theme(axis.text = element_text(color = "black"), 
+        legend.position = "right")
+
+#Setting new theme as the default theme
+theme_set(theme_def)
+
 ##Plot 1 (tn)
-tn.anova.plot <- ggplot(Peter_Paul_Nutrients_wr, aes(y = tn_ug, x = as.factor(month), fill = lakename)) +
+##Groups were not created for TN, but within each month, the lake with the larger
+##TN value is labelled "a" and the lake with the smaller TN value is labelled "b"
+##(because the lakename significantly predicted TN concentrations)
+tn.anova.plot <- ggplot(Peter_Paul_Nutrients_wr, aes(y = tn_ug, x = month, 
+                                                     fill = lakename)) +
   geom_boxplot() + 
   labs(y = expression(paste("TN (", mu, "g/L)")), 
        x = "Month", fill = "Lake Name") +
-  scale_fill_manual(values = c("#66c2a5", "#fc8d62"))
+  scale_fill_manual(values = c("#66c2a5", "#fc8d62")) +
+  ylim(0, 2200) +
+    stat_summary(geom = "text", position=position_dodge(width=0.9), 
+               fun.y = max, vjust = -1, 
+               size = 3.5,
+               label = c("a", "b", "a", "b", "a", 
+                         "b", "a", "b", "a", "b"))
 
 print(tn.anova.plot)
 
 ##Plot 2 (tp)
-tp.anova.plot <- ggplot(Peter_Paul_Nutrients_wr, aes(y = tp_ug, x = as.factor(month), fill = lakename)) +
+tp.anova.plot <- ggplot(Peter_Paul_Nutrients_wr, 
+                        aes(y = tp_ug, x = month, 
+                            fill = lakename)) +
   geom_boxplot() + 
   labs(y = expression(paste("TP (", mu, "g/L)")), 
        x = "Month", fill = "Lake Name") +
   scale_fill_manual(values = c("#66c2a5", "#fc8d62")) +
-  ylim(0, 70) +
+  ylim(0, 80) +
   stat_summary(geom = "text", position=position_dodge(width=0.9), 
                fun.y = max, vjust = -1, 
                size = 3.5,
@@ -143,14 +182,28 @@ tp.anova.plot <- ggplot(Peter_Paul_Nutrients_wr, aes(y = tp_ug, x = as.factor(mo
   
 print(tp.anova.plot)
 #8
-
-tp_tn_plot <- plot_grid(tn.anova.plot + theme(legend.position="none"),
-                        tp.anova.plot + theme(legend.position="none"), 
+##Cowplot
+tp_tn_plot <- plot_grid(tn.anova.plot + 
+                          theme(legend.position = "none", 
+                                axis.title.x = element_blank(),
+                                axis.text.x=element_blank(),
+                                axis.ticks.x=element_blank(),
+                                plot.margin = margin(t = 0, r = 0, 
+                                                     b = 0, l = 0,
+                                                     unit = "cm")),
+                        tp.anova.plot + 
+                          theme(legend.position="none", 
+                                plot.margin = margin(t = 0, r = 0, 
+                                                     b = 0, l = 0, 
+                                                     unit = "cm")),
                         nrow = 2, align = "hv")
 
-legend <- get_legend(tn.anova.plot + guides(color = guide_legend(nrow = 1)) + theme(legend.position = "bottom"))
+legend <- get_legend(tn.anova.plot + 
+                       guides(color = guide_legend(nrow = 1)) + 
+                       theme(legend.position = "top"))
 
-plot_grid(tp_tn_plot, legend, ncol = 1, rel_heights = c(1, .1))
+
+plot_grid(legend, tp_tn_plot, ncol = 1, rel_heights = c(.1, 1))
 
 ```
 
