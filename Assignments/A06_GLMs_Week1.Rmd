@@ -1,6 +1,6 @@
 ---
 title: "Assignment 6: GLMs week 1 (t-test and ANOVA)"
-author: "Student Name"
+author: "Claire Mullaney"
 output: pdf_document
 geometry: margin=2.54cm
 editor_options: 
@@ -29,9 +29,24 @@ The completed exercise is due on Tuesday, February 18 at 1:00 pm.
 
 ```{r, message = FALSE}
 #1
+getwd()
+library(tidyverse)
+library(cowplot)
+library(agricolae)
 
+Peter_Paul_Nutrients <- 
+  read.csv("./Data/Processed/NTL-LTER_Lake_Nutrients_PeterPaul_Processed.csv")
 
 #2
+#Looking at column names and date format
+head(Peter_Paul_Nutrients)
+
+#Changing column sampledate to a date format
+Peter_Paul_Nutrients$sampledate <- as.Date(Peter_Paul_Nutrients$sampledate, format = "%Y-%m-%d")
+
+#Verifying change
+class(Peter_Paul_Nutrients$sampledate)
+head(Peter_Paul_Nutrients)
 
 ```
 
@@ -40,8 +55,11 @@ The completed exercise is due on Tuesday, February 18 at 1:00 pm.
 
 3. Wrangle your dataset so that it contains only surface depths and only the years 1993-1996, inclusive. Set month as a factor.
 ```{r}
-
-
+Peter_Paul_Nutrients_wr <- 
+  filter(Peter_Paul_Nutrients, 
+         depth == 0 & 
+           year4 >= 1993 & 
+           year4 <= 1996)
 ```
 
 ## Analysis
@@ -50,19 +68,45 @@ Peter Lake was manipulated with additions of nitrogen and phosphorus over the ye
 
 4. Which application of the GLM will you use (t-test, one-way ANOVA, two-way ANOVA with main effects, or two-way ANOVA with interaction effects)? Justify your choice.
 
-> Answer: 
+> Answer: I will use a two-way ANOVA with interaction effects...
 
 5. Run your test for TN. Include examination of groupings and consider interaction effects, if relevant.
 
 6. Run your test for TP. Include examination of groupings and consider interaction effects, if relevant.
 
 ```{r}
-#5
+#For number 5: run lm, aov, and then stop because nothing is significant. We chose to do a 2-way anova with interactions, so we have to stop after that without any post-hoc tests.
 
+#5 Test for tn
+##As linear model
+tn.anova.2way.int <- lm(data = Peter_Paul_Nutrients_wr, tn_ug ~ lakename * as.factor(month))
+summary(tn.anova.2way.int)
 
-#6
+##As aov
+tn.anova.2way.aov <- aov(data = Peter_Paul_Nutrients_wr, tn_ug ~ lakename * as.factor(month))
+summary(tn.anova.2way.aov)
 
+TukeyHSD(tn.anova.2way.aov)
 
+###No significant interactions; no need to form groups
+
+#6 Test for tp
+##As linear model
+tp.anova.2way.int <- lm(data = Peter_Paul_Nutrients_wr, tp_ug ~ lakename * as.factor(month))
+summary(tp.anova.2way.int)
+
+##Creating an interaction as a separate variable and formatting as an aov
+tp.interaction <- with(Peter_Paul_Nutrients_wr, interaction(lakename, as.factor(month)))
+                       
+tp.anova.2way.aov <- aov(data = Peter_Paul_Nutrients_wr, tp_ug ~ tp.interaction)
+summary(tp.anova.2way.aov)
+
+##TukeyHSD post-hoc test for pairwise differences
+TukeyHSD(tp.anova.2way.aov)
+
+##Groups
+tp.groups <- HSD.test(tp.anova.2way.aov, trt = "tp.interaction", group = TRUE)
+tp.groups
 ```
 
 7. Create two plots, with TN (plot 1) or TP (plot 2) as the response variable and month and lake as the predictor variables. Hint: you may use some of the code you used for your visualization assignment. Assign groupings with letters, as determined from your tests. Adjust your axes, aesthetics, and color palettes in accordance with best data visualization practices.
@@ -71,9 +115,38 @@ Peter Lake was manipulated with additions of nitrogen and phosphorus over the ye
 
 ```{r}
 #7
+##Plot 1 (tn)
+tn.anova.plot <- ggplot(Peter_Paul_Nutrients_wr, aes(y = tn_ug, x = as.factor(month), fill = lakename)) +
+  geom_boxplot() + 
+  labs(y = expression(paste("TN (", mu, "g/L)")), 
+       x = "Month", fill = "Lake Name") +
+  scale_fill_manual(values = c("#66c2a5", "#fc8d62"))
 
+print(tn.anova.plot)
 
+##Plot 2 (tp)
+tp.anova.plot <- ggplot(Peter_Paul_Nutrients_wr, aes(y = tp_ug, x = as.factor(month), fill = lakename)) +
+  geom_boxplot() + 
+  labs(y = expression(paste("TP (", mu, "g/L)")), 
+       x = "Month", fill = "Lake Name") +
+  scale_fill_manual(values = c("#66c2a5", "#fc8d62")) +
+  ylim(0, 70) +
+  stat_summary(geom = "text", position=position_dodge(width=0.9), 
+               fun.y = max, vjust = -1, 
+               size = 3.5,
+               label = c("bcd", "cd", "ab", "d", "a", 
+                         "d", "abc", "d", "abcd", "cd"))
+  
+print(tp.anova.plot)
 #8
+
+tp_tn_plot <- plot_grid(tn.anova.plot + theme(legend.position="none"),
+                        tp.anova.plot + theme(legend.position="none"), 
+                        nrow = 2, align = "hv")
+
+legend <- get_legend(tn.anova.plot + guides(color = guide_legend(nrow = 1)) + theme(legend.position = "bottom"))
+
+plot_grid(tp_tn_plot, legend, ncol = 1, rel_heights = c(1, .1))
 
 ```
 
