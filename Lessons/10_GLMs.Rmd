@@ -92,7 +92,7 @@ The two-sample *t* test is used to test the hypothesis that the mean of two samp
 ```{r}
 shapiro.test(EPAair$Ozone[EPAair$Year == 2018])
 shapiro.test(EPAair$Ozone[EPAair$Year == 2019])
-var.test(EPAair$Ozone ~ EPAair$Year) #true rationis not equal to one
+var.test(EPAair$Ozone ~ EPAair$Year) #true ratio is not equal to one
 
 ggplot(EPAair, aes(x = Ozone, color = as.factor(Year))) +
   geom_freqpoly()

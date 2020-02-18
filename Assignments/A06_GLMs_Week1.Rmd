@@ -7,6 +7,10 @@ editor_options:
   chunk_output_type: console
 ---
 
+```{r, include = FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+```
+
 ## OVERVIEW
 
 This exercise accompanies the lessons in Environmental Data Analytics on t-tests and ANOVAs. 
@@ -68,7 +72,7 @@ Peter Lake was manipulated with additions of nitrogen and phosphorus over the ye
 
 4. Which application of the GLM will you use (t-test, one-way ANOVA, two-way ANOVA with main effects, or two-way ANOVA with interaction effects)? Justify your choice.
 
-> Answer: I will use a two-way ANOVA with interaction effects...
+> Answer: I will use a two-way ANOVA with interaction effects to account for the possibility that one of the explanatory variables depends on or affects the other. For example, if one of the lakes were in the sun and one were in the shade, levels of nitrogen or phosphorus could be partially predicted by the interaction between the lake and season variables.
 
 5. Run your test for TN. Include examination of groupings and consider interaction effects, if relevant.
 
