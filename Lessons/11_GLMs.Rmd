@@ -176,6 +176,7 @@ Litter.groups
 # Plot the results
 # Edit this graph to make it more visually appealing.
 # Add letters to represent statistical groupings.
+#Incomplete
 Litter.anova.plot <- ggplot(Litter, aes(y = dryMass, x = nlcdClass, color = functionalGroup)) +
   geom_boxplot() + 
   labs(y = "Dry Mass", x = "NLCD Class", color = "Functional Group") +
