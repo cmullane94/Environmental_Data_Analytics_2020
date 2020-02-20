@@ -46,13 +46,20 @@ Let's say we wanted to predict total nitrogen concentrations by depth and by lak
 TNancova.main <- lm(data = PeterPaul.chem.nutrients, tn_ug ~ lakename + depth)
 summary(TNancova.main)
 
+#Intercept: TN in Paul Lake
+#Intercapt + First alpha: TN in Peter Lake
+#Beta: coefficient of depth regardless of lake; for each meter deeper, TN increases by 68.559
+
 # interaction effects
+#depth is only for Paul Lake; look at lakenamePeter Lake:depth for Peter Lake?
 TNancova.interaction <- lm(data = PeterPaul.chem.nutrients, tn_ug ~ lakename * depth)
 summary(TNancova.interaction)
 
 TNplot <- ggplot(PeterPaul.chem.nutrients, aes(x = depth, y = tn_ug, color = lakename)) + 
   geom_point() + 
   geom_smooth(method = "lm", se = FALSE) +
+  labs (x = "Depth (m)", y = expression(TN ~ (mu*g / L)), color = "") +
+  scale_color_manual(values = c("darkblue", "pink")) +
   xlim(0, 10)
 print(TNplot)
 
@@ -99,13 +106,17 @@ Next, we will build a hierarchical model. We will use the package `nlme` for our
 
 
 ```{r}
+#Use lme with random effects
+#Random effects need to be categorical
 TempTest.mixed <- lme(data = NTL.summertemp,
                      temperature_C ~ year4, 
                      random = ~1|lakename)
 summary(TempTest.mixed)
 rsquared(TempTest.mixed)
 
+#Only fixed effects
 # Compare the random effects model with the fixed effects model
+#GLS guves you slightly different output with different information; could also run as an lm
 TempTest.fixed <- gls(data = NTL.summertemp,
                       temperature_C ~ year4)
 summary(TempTest.fixed)
@@ -118,6 +129,7 @@ NTL.tempmodel <-
 ggplot(NTL.summertemp, aes(x = year4, y = temperature_C, color = lakename)) +
   geom_point() +
   scale_color_viridis_d() +
+  #drawing your own line; just give it an intercept and a slope. We use the ones from the random effect model here. The random effect itself isn't represented on the graph in any way, I don't think...
   geom_abline(intercept = -97.72, slope = 0.06) +
   # make it look better
   labs(x = "", y = expression("Temperature " ( degree~C)), color = "") +
