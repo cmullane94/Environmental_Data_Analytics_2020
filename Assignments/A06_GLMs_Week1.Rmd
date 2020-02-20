@@ -80,6 +80,11 @@ Peter Lake was manipulated with additions of nitrogen and phosphorus over the ye
 
 5. Run your test for TN. Include examination of groupings and consider interaction effects, if relevant.
 
+>***Run the test with the interaction. Letters can be assigned to the graphs below based on the only variable that is significant, lakename. In this case, since our hypothesis was that there would be an interaction, we stopped after running run test. But model selection would also be a viable option.
+
+>Results of lm vs. results of aov? Why aren't both lakes significant in lm?
+Process for grouping when interactions are not significant but some main effects are?
+
 6. Run your test for TP. Include examination of groupings and consider interaction effects, if relevant.
 
 ```{r}
