@@ -112,6 +112,8 @@ TempTest.mixed <- lme(data = NTL.summertemp,
                      temperature_C ~ year4, 
                      random = ~1|lakename)
 summary(TempTest.mixed)
+#Marginal rsquared: fixed effects
+#Conditional rquared: rsquared when you add in the random effects
 rsquared(TempTest.mixed)
 
 #Only fixed effects
@@ -131,6 +133,8 @@ ggplot(NTL.summertemp, aes(x = year4, y = temperature_C, color = lakename)) +
   scale_color_viridis_d() +
   #drawing your own line; just give it an intercept and a slope. We use the ones from the random effect model here. The random effect itself isn't represented on the graph in any way, I don't think...
   geom_abline(intercept = -97.72, slope = 0.06) +
+  #Adding line from fixed effects model -- doing geom smooth "lm" just takes the x and y relationship; do not use this method if you are not absolutely sure this is what you want to represent
+  geom_smooth("lm", se = FALSE) +
   # make it look better
   labs(x = "", y = expression("Temperature " ( degree~C)), color = "") +
   theme(legend.spacing.x = unit(0, "cm"))
@@ -139,4 +143,4 @@ print(NTL.tempmodel)
 
 Question: How would you interpret the collective results of your mixed effects model in the context of the study question?
 
-> ANSWER: 
+> ANSWER: With each passing year, the temperature increases by 0.06 degrees C....what else to say about this?
