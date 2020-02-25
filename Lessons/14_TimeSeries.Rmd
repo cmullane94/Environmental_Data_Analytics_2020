@@ -196,6 +196,8 @@ How might you interpret the results of this test, and how might you represent th
 "Mean daily discharge in the Eno Rver from 1927-1971 was significantly higher than mean daily discharge from 1985-2019 (Wilcoxon text, W = 1.17*10^8, p <0.001)
 Could graph in a box plot, density plot (probability density..?), violin plot
 
+***End of class 2/25/2020***
+
 ### Monotonic trend analysis
 
 In general, detecting a monotonic trend requires a long sequence of data with few gaps. If we are working with monthly data, a time series of at least five years is recommended. Gaps can be accounted for, but a gap that makes up more than 1/3 of the sampling period is generally considered the threshold for considering a gap to be too long (a step trend analysis might be better in this situation). 
