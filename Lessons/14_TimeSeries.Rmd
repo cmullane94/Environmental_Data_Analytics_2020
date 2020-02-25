@@ -76,6 +76,10 @@ Notice there are missing data from 1971 to 1985. Gaps this large are generally a
 Let's start by removing the NAs and splitting the dataset into the early and late years. 
 
 ```{r}
+#Why do you need pipes here?
+#drop_na - can select specific columns of daata
+#na.omit and na.exclude — any row that has an NA in any column will be taken out
+
 EnoDischarge.complete <- EnoDischarge %>%
   drop_na(discharge.mean)
 
@@ -102,6 +106,7 @@ We first need to turn the discharge data into a time series object in R. This is
 Note: time series objects must be equispaced. In our case, we have daily data with no NAs in the data frame, so we don't need to worry about this. We will cover how to address data that are not equispaced later in the lesson.
 
 ```{r}
+#*th column of dataset
 EnoDischarge.late_ts <- ts(EnoDischarge.late[[8]], frequency = 365)
 ```
 
@@ -112,10 +117,16 @@ The `stl` function decomposes the time series object into its component parts. W
 # Generate the decomposition
 EnoDischarge.late_Decomposed <- stl(EnoDischarge.late_ts, s.window = "periodic")
 
-# Visualize the decomposed series. 
+# Visualize the decomposed series.
+#Time is over 35 years
+#Seasonal + Trend + Remainder
+#Bars on the side are scale bars 
+#Trend and seasonal show a very small portion of the data (based on the scale bars), so the remainder looks very similar to the data
+#Seasonal -- what is the overall seasonal effect thtat can be observed year to year 
 plot(EnoDischarge.late_Decomposed)
 
 # We can extract the components and turn them into data frames
+#Seasonal, trend, and data components of the time series are in columns 1-3, even though you can't see them
 EnoDischarge.late_Components <- as.data.frame(EnoDischarge.late_Decomposed$time.series[,1:3])
 EnoDischarge.late_Components <- mutate(EnoDischarge.late_Components,
                       Observed = EnoDischarge.late$discharge.mean,     
@@ -124,15 +135,16 @@ EnoDischarge.late_Components <- mutate(EnoDischarge.late_Components,
 # Visualize how the trend maps onto the data
 ggplot(EnoDischarge.late_Components) +
   geom_line(aes(y = Observed, x = Date),  size = 0.25) +
-  geom_line(aes(y = trend, x = Date), color = "#c13d75ff") +
+  geom_line(aes(y = trend, x = Date), color = "#c13d75ff", size = 1) +
   geom_hline(yintercept = 0, lty = 2) +
   ylab(expression("Discharge (ft"^3*"/s)"))
 
 # Visualize how the seasonal cycle maps onto the data
+#stl function does not obey data boundaries
 ggplot(EnoDischarge.late_Components) +
   geom_line(aes(y = Observed, x = Date),  size = 0.25) +
   geom_line(aes(y = seasonal, x = Date), color = "#c13d75ff") +
-  geom_hline(yintercept = 0, lty = 2) +
+  geom_hline(yintercept = 0, lty = 2) + #dashed line at 0
   ylab(expression("Discharge (ft"^3*"/s)"))
 
 ```
@@ -151,7 +163,7 @@ Step trend analysis works well for upstream/downstream and before/after study de
 Note: ALWAYS look into the assumptions of a given test to ensure it matches with your data and with your research question.
 
 * **Change point detection**, e.g., `pettitt.test` (package: trend), `breakpoints` (package: strucchange), `chngpt.test` (package: chngpt), multiple tests in package: changepoint
-* **t-test (paired or unpaired)**
+* **t-test (paired or unpaired)** #assume normal distribution & equal variance across the datasets
 * **Kruskal-Wallis test**: non-parametric version of t-test
 * **ANCOVA**, analysis of covariance
 
@@ -164,15 +176,25 @@ EnoDischarge.late.subsample <- sample_n(EnoDischarge.late, 5000)
 
 shapiro.test(EnoDischarge.early.subsample$discharge.mean)
 shapiro.test(EnoDischarge.late.subsample$discharge.mean)
+#Not normally distributed
 
 var.test(EnoDischarge.early$discharge.mean, EnoDischarge.late$discharge.mean)
+#Ratio is significantly different from one -- unequal variance
+
+#Violation of both assumptions of a t test
 
 wilcox.test(EnoDischarge.early$discharge.mean, EnoDischarge.late$discharge.mean)
+
+summary(EnoDischarge.early$discharge.mean)
+summary(EnoDischarge.late$discharge.mean)
+#True location shift is not equal to zero
 ```
 
 How might you interpret the results of this test, and how might you represent them graphically?
 
->
+>Can conclude that the mean of the early period is significantly higher than the mean of the late period.
+"Mean daily discharge in the Eno Rver from 1927-1971 was significantly higher than mean daily discharge from 1985-2019 (Wilcoxon text, W = 1.17*10^8, p <0.001)
+Could graph in a box plot, density plot (probability density..?), violin plot
 
 ### Monotonic trend analysis
 
