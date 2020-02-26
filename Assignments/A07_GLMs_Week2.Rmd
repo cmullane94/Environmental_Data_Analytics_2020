@@ -1,6 +1,6 @@
 ---
 title: "Assignment 7: GLMs week 2 (Linear Regression and beyond)"
-author: "Student Name"
+author: "Claire Mullaney"
 output: pdf_document
 geometry: margin=2.54cm
 editor_options: 
@@ -27,9 +27,20 @@ The completed exercise is due on Tuesday, February 25 at 1:00 pm.
 
 ```{r}
 #1
+getwd()
+library(tidyverse)
+library(nlme)
+library(piecewiseSEM)
 
+NTL_LTER <- read.csv("./Data/Raw/NTL-LTER_Lake_ChemistryPhysics_Raw.csv")
+Litter <- read.csv("./Data/Processed/NEON_NIWO_Litter_mass_trap_Processed.csv")
 
 #2
+
+deftheme <- theme_classic(base_size = 14) +
+  theme(axis.text = element_text(color = "black"), 
+        legend.position = "right")
+theme_set(deftheme)
 
 ```
 
@@ -48,25 +59,45 @@ Research question: What is the best set of predictors for lake temperatures in J
 ```{r}
 #3
 
+NTL_LTER_wr <- 
+  NTL_LTER %>%
+  filter(daynum >= 182 & daynum <= 212) %>%
+  select(lakename, year4, daynum, depth, temperature_C) %>%
+  na.omit
+  
 
 #4
+
+#include interaction?
+
+TempAIC <- lm(data = NTL_LTER_wr, temperature_C ~ year4 + daynum + depth)
+
+step(TempAIC)
+
+Temp <- lm(data = NTL_LTER_wr, temperature_C ~ year4 + daynum + depth)
+
+summary(Temp)
 
 ```
 
 5. What is the final set of explanatory variables that predict temperature from your multiple regression? How much of the observed variance does this model explain?
 
-> Answer: 
+> Answer: According to the AIC analysis, the final set of explanatory variables that predict temperature includes year4 (year), daynum (numerical day of the year), and depth. This model explains 74.17% of the observed variance in temperature.
 
 6. Run an interaction effects ANCOVA to predict temperature based on depth and lakename from the same wrangled dataset.
 
 ```{r}
 #6
 
+Temp.2 <- lm(data = NTL_LTER_wr, temperature_C ~ depth * lakename)
+
+summary(Temp.2)
+
 ```
 
 7. Is there a significant interaction between depth and lakename? How much variance in the temperature observations does this explain?
 
-> Answer: 
+> Answer: Yes, there is a significant interaction between depth and lakename. A model that uses the interaction effects between depth and lakename to predict temperature explains 78.57% of the observed variance in temperature.
 
 8. Create a graph that depicts temperature by depth, with a separate color for each lake. Add a geom_smooth (method = "lm", se = FALSE) for each lake. Make your points 50 % transparent. Adjust your y axis limits to go from 0 to 35 degrees. Clean up your graph to make it pretty. 
 
@@ -81,21 +112,34 @@ a. Build and run a mixed effects model.
 b. Check the difference between the marginal and conditional R2 of the model. 
 
 ```{r}
+dryMass.lme <- lme(data = Litter, 
+              dryMass ~ nlcdClass * functionalGroup, 
+              random = ~1|plotID)
 
+summary(dryMass.lme)
+
+#Marginal rsquared: fixed effects
+#Conditional rquared: rsquared when you add in the random effects
+rsquared(dryMass.lme)
 
 ```
 
 b. continued... How much more variance is explained by adding the random effect to the model? 
 
-> Answer: 2 %
+> Answer: About 2% more is explained by adding the random effect to the model. 
 
 c. Run the same model without the random effect.
 d. Run an anova on the two tests. 
 ```{r}
- 
+dryMass.lm <- lm(data = Litter, 
+              dryMass ~ nlcdClass * functionalGroup)
+
+summary(dryMass.lm)
+
+anova(dryMass.lme, dryMass.lm)
 
 ```
 
 d. continued... Is the mixed effects model a better model than the fixed effects model? How do you know?
 
-> Answer: 
+> Answer: The mixed effects model is better than the fixed effects model; the AIC is lower by a value of 20. The p value for the comparison of the two models is <.0001, indicating that this difference results in a significantly different fit (and that the model with the lower AIC is significantly better).
