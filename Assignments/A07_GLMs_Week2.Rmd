@@ -39,7 +39,7 @@ Litter <- read.csv("./Data/Processed/NEON_NIWO_Litter_mass_trap_Processed.csv")
 
 deftheme <- theme_classic(base_size = 14) +
   theme(axis.text = element_text(color = "black"), 
-        legend.position = "right")
+        legend.position = "right", panel.grid = element_line(color = "black"))
 theme_set(deftheme)
 
 ```
@@ -104,6 +104,16 @@ summary(Temp.2)
 ```{r}
 #8
 
+temp.depth <- ggplot(data = NTL_LTER_wr, 
+                     aes(x = depth, y = temperature_C, color = lakename)) +
+  geom_point(alpha = 0.5) +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(x = "Depth (m)", y = expression("Temperature " (degree~C)), 
+       color = "") +
+  ylim(0, 35) + 
+  scale_color_viridis_d()
+
+print(temp.depth)
 ```
 
 9. Run a mixed effects model to predict dry mass of litter. We already know that nlcdClass and functionalGroup have a significant interaction, so we will specify those two variables as fixed effects with an interaction. We also know that litter mass varies across plot ID, but we are less interested in the actual effect of the plot itself but rather in accounting for the variance among plots. Plot ID will be our random effect.
