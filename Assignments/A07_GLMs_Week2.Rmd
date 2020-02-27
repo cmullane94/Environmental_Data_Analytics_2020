@@ -6,7 +6,9 @@ geometry: margin=2.54cm
 editor_options: 
   chunk_output_type: console
 ---
-
+```{r, include = FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+```
 ## OVERVIEW
 
 This exercise accompanies the lessons in Environmental Data Analytics on generalized linear models. 
@@ -27,6 +29,7 @@ The completed exercise is due on Tuesday, February 25 at 1:00 pm.
 
 ```{r}
 #1
+#Loading packages and data
 getwd()
 library(tidyverse)
 library(nlme)
@@ -36,10 +39,10 @@ NTL_LTER <- read.csv("./Data/Raw/NTL-LTER_Lake_ChemistryPhysics_Raw.csv")
 Litter <- read.csv("./Data/Processed/NEON_NIWO_Litter_mass_trap_Processed.csv")
 
 #2
-
+#Setting default theme
 deftheme <- theme_classic(base_size = 14) +
   theme(axis.text = element_text(color = "black"), 
-        legend.position = "right", panel.grid = element_line(color = "black"))
+        legend.position = "right")
 theme_set(deftheme)
 
 ```
@@ -58,17 +61,16 @@ Research question: What is the best set of predictors for lake temperatures in J
 
 ```{r}
 #3
+#Filtering by dates in July, selecting relevant columns, and removing NAs
 
 NTL_LTER_wr <- 
   NTL_LTER %>%
   filter(daynum >= 182 & daynum <= 212) %>%
   select(lakename, year4, daynum, depth, temperature_C) %>%
-  na.omit
+  na.omit()
   
-
 #4
-
-#include interaction?
+#Determing the best multiple linear regression model for predicting temperature
 
 TempAIC <- lm(data = NTL_LTER_wr, temperature_C ~ year4 + daynum + depth)
 
@@ -97,13 +99,13 @@ summary(Temp.2)
 
 7. Is there a significant interaction between depth and lakename? How much variance in the temperature observations does this explain?
 
-> Answer: Yes, there is a significant interaction between depth and lakename. A model that uses the interaction effects between depth and lakename to predict temperature explains 78.57% of the observed variance in temperature.
+> Answer: Yes, there is a significant interaction between depth and lakename. For the overall model, p < 0.0001, and most of the individual interaction terms in the model (e.g., the interaction between depth and Peter Lake) significantly affect temperature. A model that uses the interaction effects between depth and lakename to predict temperature explains 78.57% of the observed variance in temperature.
 
 8. Create a graph that depicts temperature by depth, with a separate color for each lake. Add a geom_smooth (method = "lm", se = FALSE) for each lake. Make your points 50 % transparent. Adjust your y axis limits to go from 0 to 35 degrees. Clean up your graph to make it pretty. 
 
 ```{r}
 #8
-
+#Creating a graph of temperature vs. depth
 temp.depth <- ggplot(data = NTL_LTER_wr, 
                      aes(x = depth, y = temperature_C, color = lakename)) +
   geom_point(alpha = 0.5) +
@@ -122,34 +124,37 @@ a. Build and run a mixed effects model.
 b. Check the difference between the marginal and conditional R2 of the model. 
 
 ```{r}
+#Mixed effects model
 dryMass.lme <- lme(data = Litter, 
               dryMass ~ nlcdClass * functionalGroup, 
               random = ~1|plotID)
 
 summary(dryMass.lme)
 
-#Marginal rsquared: fixed effects
-#Conditional rquared: rsquared when you add in the random effects
+#Marginal r-squared: fixed effects
+#Conditional r-quared: r-squared when you add in the random effects
 rsquared(dryMass.lme)
 
 ```
 
 b. continued... How much more variance is explained by adding the random effect to the model? 
 
-> Answer: About 2% more is explained by adding the random effect to the model. 
+> Answer: About 2% (more exactly, 2.132%) more variance is explained by adding the random effect to the model; the fixed effects explain about 24.658% of the variance and the fixed and random effects explain about 26.790%. 
 
 c. Run the same model without the random effect.
 d. Run an anova on the two tests. 
 ```{r}
+#Same model without random effect
 dryMass.lm <- lm(data = Litter, 
               dryMass ~ nlcdClass * functionalGroup)
 
 summary(dryMass.lm)
 
+#Comparing the results of the two models
 anova(dryMass.lme, dryMass.lm)
 
 ```
 
 d. continued... Is the mixed effects model a better model than the fixed effects model? How do you know?
 
-> Answer: The mixed effects model is better than the fixed effects model; the AIC is lower by a value of 20. The p value for the comparison of the two models is <.0001, indicating that this difference results in a significantly different fit (and that the model with the lower AIC is significantly better).
+> Answer: The mixed effects model is better than the fixed effects model; its AIC is lower by a value of about 20. The p-value for the comparison of the two models is <.0001, confirming that this lower AIC value indicates that the mixed effects model has a significantly different (and, in this case, better) fit than the fixed effects model.

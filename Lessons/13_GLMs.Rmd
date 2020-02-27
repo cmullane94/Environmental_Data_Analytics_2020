@@ -112,8 +112,8 @@ TempTest.mixed <- lme(data = NTL.summertemp,
                      temperature_C ~ year4, 
                      random = ~1|lakename)
 summary(TempTest.mixed)
-#Marginal rsquared: fixed effects
-#Conditional rquared: rsquared when you add in the random effects
+#Marginal r-squared: fixed effects
+#Conditional r-quared: rsquared when you add in the random effects
 rsquared(TempTest.mixed)
 
 #Only fixed effects
