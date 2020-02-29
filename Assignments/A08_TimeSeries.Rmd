@@ -1,6 +1,6 @@
 ---
 title: "Assignment 8: Time Series Analysis"
-author: "Student Name"
+author: "Claire Mullaney"
 output: pdf_document
 geometry: margin=2.54cm
 editor_options: 
@@ -29,7 +29,51 @@ The completed exercise is due on Tuesday, March 3 at 1:00 pm.
 * Import the ten datasets from the Ozone_TimeSeries folder in the Raw data folder. These contain ozone concentrations at Garinger High School in North Carolina from 2010-2019 (the EPA air database only allows downloads for one year at a time). Call these GaringerOzone201*, with the star filled in with the appropriate year in each of ten cases.
 
 ```{r, message = FALSE}
+#Checking working directory and loading packages
 
+getwd()
+library(tidyverse)
+library(lubridate)
+library(zoo)
+library(trend)
+
+#Setting default ggplot theme
+deftheme <- theme_classic(base_size = 14) +
+  theme(axis.text = element_text(color = "black"), 
+        legend.position = "right")
+theme_set(deftheme)
+
+#Importing datasets
+
+GaringerOzone2010 <- read.csv("./Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2010_raw.csv")
+GaringerOzone2011 <- read.csv("./Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2011_raw.csv")
+GaringerOzone2012 <- read.csv("./Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2012_raw.csv")
+GaringerOzone2013 <- read.csv("./Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2013_raw.csv")
+GaringerOzone2015 <- read.csv("./Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2014_raw.csv")
+GaringerOzone2016 <- read.csv("./Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2015_raw.csv")
+GaringerOzone2017 <- read.csv("./Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2016_raw.csv")
+GaringerOzone2018 <- read.csv("./Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2017_raw.csv")
+GaringerOzone2019 <- read.csv("./Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2018_raw.csv")
+
+
+#Ozone_files <- list.files(path = "./Data/Raw/Ozone_TimeSeries/", 
+                         #pattern="*.csv", full.names=TRUE)
+
+#for(i in Ozone_files) {
+  #for(j in 0:9) {
+      #assign(paste("GaringerOzone201", j, sep=""), read.csv(i))
+  #}
+#}
+
+
+Ozone_files_named <- list(GaringerOzone2010, GaringerOzone2011, 
+                            GaringerOzone2012, GaringerOzone2013,
+                            GaringerOzone2014, GaringerOzone2015,
+                            GaringerOzone2016, GaringerOzone2017,
+                            GaringerOzone2018,GaringerOzone2019)
+
+#Checking column names to decide whether to use join vs. rbind
+lapply(Ozone_files_named, colnames)
 
 ```
 
@@ -41,26 +85,41 @@ The completed exercise is due on Tuesday, March 3 at 1:00 pm.
 
 4. Wrangle your dataset so that it only contains the columns Date, Daily.Max.8.hour.Ozone.Concentration, and DAILY_AQI_VALUE. 
 
-5. Notice there are a few days in each year that are missing ozone concentrations. We want to generate a daily dataset, so we will need to fill in any missing days with NA. Create a new data frame that contains a sequence of dates from 2010-01-01 to 2019-12-13 (hint: `as.data.frame(seq())`). Call this new data frame Days. Rename the column name in Days to "Date".
+5. Notice there are a few days in each year that are missing ozone concentrations. We want to generate a daily dataset, so we will need to fill in any missing days with NA. Create a new data frame that contains a sequence of dates from 2010-01-01 to 2019-12-31 (hint: `as.data.frame(seq())`). Call this new data frame Days. Rename the column name in Days to "Date".
 
 6. Use a `left_join` to comine the data frames. Specify the correct order of data frames within this function so that the final dimensions are 3652 rows and 3 columns. Call your combined data frame GaringerOzone. 
 
 ```{r}
 # 2 
-
+#Combining datasets into one using rbind
+GaringerOzone <- rbind(GaringerOzone2010, GaringerOzone2011, 
+                            GaringerOzone2012, GaringerOzone2013,
+                            GaringerOzone2014, GaringerOzone2015,
+                            GaringerOzone2016, GaringerOzone2017,
+                            GaringerOzone2018,GaringerOzone2019)
 
 # 3
+#Changing date column to date format
 
+GaringerOzone$Date <- as.Date(GaringerOzone$Date, format = "%m/%d/%Y")
 
 # 4
-
+#Selecting necessary columns
+GaringerOzone.wr <- GaringerOzone %>%
+  select(Date, Daily.Max.8.hour.Ozone.Concentration, DAILY_AQI_VALUE)
 
 # 5
-
-
+#Creating a days data frame
+Days <- as.data.frame(seq(from = as.Date("2010-01-01"), to = 
+                            as.Date("2019-12-31"), by = 1))
+ 
+names(Days)[names(Days) == "seq(from = as.Date(\"2010-01-01\"), to = as.Date(\"2019-12-31\"), by = 1)"] <- "Date"
+ 
 # 6
+#Joining the data frames and checking the dimensions
+GaringerOzone <- left_join(Days, GaringerOzone.wr)
 
-
+dim(GaringerOzone)
 ```
 
 ## Visualize
@@ -68,8 +127,11 @@ The completed exercise is due on Tuesday, March 3 at 1:00 pm.
 7. Create a ggplot depicting ozone concentrations over time. In this case, we will plot actual concentrations in ppm, not AQI values. Format your axes accordingly.
 
 ```{r}
-
-
+ggplot(data = GaringerOzone, 
+       aes(x = Date, y = Daily.Max.8.hour.Ozone.Concentration)) +
+  geom_line() +
+  labs(y = "Max 8 hour Ozone Conc (ppm)")
+  
 ```
 
 ## Time Series Analysis
@@ -78,7 +140,7 @@ Study question: Have ozone concentrations changed over the 2010s at this station
 
 8. Use a linear interpolation to fill in missing daily data for ozone concentration. Why didn't we use a piecewise constant or spline interpolation?
 
-> Answer: 
+> Answer: ???
 
 9. Create a new data frame called GaringerOzone.monthly that contains aggregated data: mean ozone concentrations for each month. In your pipe, you will need to first add columns for year and month to form the groupings. In a separate line of code, create a new Date column with each month-year combination being set as the first day of the month (this is for graphing purposes only)
 
@@ -86,7 +148,7 @@ Study question: Have ozone concentrations changed over the 2010s at this station
 
 11. Run a time series analysis. In this case the seasonal Mann-Kendall is most appropriate; why is this?
 
-> Answer: 
+> Answer: ???
 
 12. To figure out the slope of the trend, run the function `sea.sens.slope` on the time series dataset. 
 
@@ -94,22 +156,40 @@ Study question: Have ozone concentrations changed over the 2010s at this station
 
 ```{r}
 # 8
-
+#Linear interpolation
+GaringerOzone$Daily.Max.8.hour.Ozone.Concentration <- na.approx(GaringerOzone$Daily.Max.8.hour.Ozone.Concentration)
 
 # 9
+#Adding Month and Year columns, grouping the df by month/year, and summarizing ozone concentrations by month/year
+GaringerOzone.monthly <- GaringerOzone %>%
+mutate(Year = year(Date), Month = month(Date)) %>%
+  group_by(Year, Month) %>%
+  summarize(Mean.Ozone.Conc = mean(Daily.Max.8.hour.Ozone.Concentration))
 
+#Adding a new Date column that lists each month/year as a complete date including the first day of the month
+GaringerOzone.monthly$Date <- seq(from = as.Date("2010-01-01"), to = 
+                            as.Date("2019-12-01"), by = "month")
 
 # 10
-
+#Creating a time series
+GaringerOzone.monthly.ts <- ts(
+  GaringerOzone.monthly$Mean.Ozone.Conc, frequency = 12, 
+                        start = c(2010, 1, 1), end = c(2019, 12, 1))
 
 # 11
- 
+#Running a time series analysis (smk)
+GaringerOzone.monthly.trend <- smk.test(GaringerOzone.monthly.ts)
+summary(GaringerOzone.monthly.trend)
 
 # 12
-
+sea.sens.slope(GaringerOzone.monthly.ts)
 
 # 13
-
+ggplot(data = GaringerOzone.monthly, 
+       aes(x = Date, y = Mean.Ozone.Conc)) +
+  geom_line() +
+  geom_point() +
+  labs(y = "Mean Max 8 hour Ozone Conc (ppm)")
 
 ```
 
