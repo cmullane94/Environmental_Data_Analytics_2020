@@ -114,7 +114,7 @@ dim(GaringerOzone)
 ggplot(data = GaringerOzone, 
        aes(x = Date, y = Daily.Max.8.hour.Ozone.Concentration)) +
   geom_line() +
-  labs(y = "Max 8 hour Ozone Conc (ppm)")
+  labs(y = "Max 8 hour Ozone Concontration (ppm)")
   
 ```
 
@@ -132,7 +132,7 @@ Study question: Have ozone concentrations changed over the 2010s at this station
 
 11. Run a time series analysis. In this case the seasonal Mann-Kendall is most appropriate; why is this?
 
-> Answer: ???
+> Answer: The graph for Question 7 exhibits clear seasonal trends; increasing and decreasing ozone concentration values repeat over time. The seasonal Mann-Kendall time series analysis is the only test that accounts for seasonality when analyzing monotonic trends. Additionally, our data are nonparametric, i.e., they do not come from a population that has a probability distribution with fixed parameters (such as a normal distribution). Additionally, because we are not using daily data and instead found the mean ozone concentration by month, we do not have to account for temporal autocorrelation. This factors eliminate the linear regression, Mann-Kendall, and modified Mann-Kendall tests as possibilities and make the seasonal Mann-Kendall the best option.
 
 12. To figure out the slope of the trend, run the function `sea.sens.slope` on the time series dataset. 
 
