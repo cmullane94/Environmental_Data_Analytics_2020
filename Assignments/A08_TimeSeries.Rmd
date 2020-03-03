@@ -72,7 +72,7 @@ for(i in 1:length(Ozone_files)) {
 
 5. Notice there are a few days in each year that are missing ozone concentrations. We want to generate a daily dataset, so we will need to fill in any missing days with NA. Create a new data frame that contains a sequence of dates from 2010-01-01 to 2019-12-31 (hint: `as.data.frame(seq())`). Call this new data frame Days. Rename the column name in Days to "Date".
 
-6. Use a `left_join` to comine the data frames. Specify the correct order of data frames within this function so that the final dimensions are 3652 rows and 3 columns. Call your combined data frame GaringerOzone. 
+6. Use a `left_join` to combine the data frames. Specify the correct order of data frames within this function so that the final dimensions are 3652 rows and 3 columns. Call your combined data frame GaringerOzone. 
 
 ```{r, eval = FALSE}
 # 2 
@@ -145,7 +145,7 @@ Study question: Have ozone concentrations changed over the 2010s at this station
 
 11. Run a time series analysis. In this case the seasonal Mann-Kendall is most appropriate; why is this?
 
-> Answer: The graph for Question 7 exhibits clear seasonal trends; increasing and decreasing ozone concentrations occur in cycles over time. The seasonal Mann-Kendall time series analysis is the only test that accounts for seasonality when analyzing monotonic trends. Our data are also nonparametric -- they do not come from a population that has a probability distribution with fixed parameters (such as a normal distribution). Additionally, because we are not using daily data and instead found the mean ozone concentration by year and month, temporal autocorrelation is not a large concern. These characteristics of the data eliminate the linear regression, Mann-Kendall, and modified Mann-Kendall tests as possibilities and make the seasonal Mann-Kendall the best option.
+> Answer: The graph for Question 7 exhibits clear seasonal trends; increasing and decreasing ozone concentrations occur in cycles over time. The seasonal Mann-Kendall time series analysis is the only test that accounts for seasonality when analyzing monotonic trends. Our data are also non-parametric -- they do not come from a population that has a probability distribution with fixed parameters (such as a normal distribution). Additionally, because we are not using daily data and instead found the mean ozone concentration by year and month, temporal autocorrelation is not a large concern. These characteristics of the data eliminate the linear regression, Mann-Kendall, and modified Mann-Kendall tests as possibilities and make the seasonal Mann-Kendall the best option.
 
 12. To figure out the slope of the trend, run the function `sea.sens.slope` on the time series dataset. 
 
@@ -203,4 +203,4 @@ ggplot(data = GaringerOzone.monthly,
 
 Study question: Have ozone concentrations changed over the 2010s at this station? 
 
-> Answer: While there were no significant seasonal trends in mean ozone concentration within individual months from 2010 to 2019 at this station, mean ozone concentration significantly decreased overall across the 2010s (z = -1.963, p < 0.05). When quantified as a linear regression, this trend has a slope of -0.0002 -- that is, mean ozone concentration decreases by about 0.0002 ppm with each passing month.
+> Answer: While there were no significant seasonal trends in mean ozone concentration within individual months from 2010 to 2019 at this station, mean ozone concentration significantly decreased overall across the 2010s (S = -77, z = -1.963, p < 0.05). When quantified as a linear regression, this trend has a slope of -0.0002 -- that is, mean ozone concentration decreases by about 0.0002 ppm with each passing month.
