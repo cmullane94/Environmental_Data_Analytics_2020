@@ -50,7 +50,7 @@ Ozone_files <- list.files(path = "./Data/Raw/Ozone_TimeSeries/",
 Ozone_files_named <- list()
 
 for(i in 1:length(Ozone_files)) {
-  Ozone_files_named[[i]] <- assign(paste("GaringerOzone201", i-1 , sep = ""), read.csv(Ozone_files[i]))
+  Ozone_files_named[[i]] <- assign(paste("GaringerOzone201", i-1, sep = ""), read.csv(Ozone_files[i]))
 }
 
 ```
@@ -163,6 +163,7 @@ GaringerOzone.monthly.ts <- ts(
 # 11
 #Running a time series analysis (smk)
 GaringerOzone.monthly.trend <- smk.test(GaringerOzone.monthly.ts)
+GaringerOzone.monthly.trend
 summary(GaringerOzone.monthly.trend)
 
 # 12
@@ -173,10 +174,12 @@ ggplot(data = GaringerOzone.monthly,
        aes(x = Date, y = Mean.Ozone.Conc)) +
   geom_line() +
   geom_point() +
-  labs(y = "Mean Max 8 hour Ozone Conc (ppm)")
+  labs(y = "Mean monthly ozone concentration (ppm)")
 
 ```
 
 14. To accompany your graph, summarize your results in context of the research question. Include output from the statistical test in parentheses at the end of your sentence. Feel free to use multiple sentences in your interpretation.
 
-> Answer: 
+Study question: Have ozone concentrations changed over the 2010s at this station? 
+
+> Answer: While there are no significant seasonal (i.e., monthly) trends in mean ozone concentration from 2010 to 2019, mean ozone concentration significantly decreased overall during the 2010s (z = -1.963, p < 0.05). When quantified as a linear regression, this trend has a slope of -0.0002 -- that is, mean ozone concentration decreases by 0.0002 ppm with each passing month.
