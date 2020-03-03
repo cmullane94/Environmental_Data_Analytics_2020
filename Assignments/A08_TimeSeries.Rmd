@@ -7,6 +7,10 @@ editor_options:
   chunk_output_type: console
 ---
 
+```{r, include = FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+```
+
 ## OVERVIEW
 
 This exercise accompanies the lessons in Environmental Data Analytics on time series analysis. 
@@ -49,6 +53,7 @@ Ozone_files <- list.files(path = "./Data/Raw/Ozone_TimeSeries/",
 
 Ozone_files_named <- list()
 
+
 for(i in 1:length(Ozone_files)) {
   Ozone_files_named[[i]] <- assign(paste("GaringerOzone201", 
                                          i-1, sep = ""), 
@@ -69,14 +74,16 @@ for(i in 1:length(Ozone_files)) {
 
 6. Use a `left_join` to comine the data frames. Specify the correct order of data frames within this function so that the final dimensions are 3652 rows and 3 columns. Call your combined data frame GaringerOzone. 
 
-```{r run = FALSE}
+```{r, eval = FALSE}
 # 2 
 #Checking column names to decide whether to use join vs. rbind
 lapply(Ozone_files_named, colnames)
 ```
 
 ```{r}
-#Combining datasets into one; rbind_list was used so the dataframes could be bound from the list created above. To use just rbind, the code would have looked like this:
+#Combining datasets into one; rbind_list was used so the dataframes
+#could be bound from the list created above. To use just rbind, the
+#code would have looked like this:
 
 #GaringerOzone <- rbind(GaringerOzone2010, GaringerOzone2011, 
                             #GaringerOzone2012, GaringerOzone2013,
@@ -101,8 +108,8 @@ GaringerOzone.wr <- GaringerOzone %>%
 Days <- as.data.frame(seq(from = as.Date("2010-01-01"), to = 
                             as.Date("2019-12-31"), by = 1))
 
-Days <- rename(Days, "Date" = "seq(from = as.Date(\"2010-01-01\"), 
-               to = as.Date(\"2019-12-31\"), by = 1)")
+Days <- rename(Days, "Date" = 
+                 "seq(from = as.Date(\"2010-01-01\"), to = as.Date(\"2019-12-31\"), by = 1)")
  
 # 6
 #Joining the data frames and checking the dimensions
@@ -120,7 +127,7 @@ dim(GaringerOzone)
 ggplot(data = GaringerOzone, 
        aes(x = Date, y = Daily.Max.8.hour.Ozone.Concentration)) +
   geom_line() +
-  labs(y = "Max 8 hour Ozone Concontration (ppm)")
+  labs(y = "Max 8 hour Ozone Concentration (ppm)")
   
 ```
 
@@ -138,7 +145,7 @@ Study question: Have ozone concentrations changed over the 2010s at this station
 
 11. Run a time series analysis. In this case the seasonal Mann-Kendall is most appropriate; why is this?
 
-> Answer: The graph for Question 7 exhibits clear seasonal trends; increasing and decreasing ozone concentrations occur in cycles over time. The seasonal Mann-Kendall time series analysis is the only test that accounts for seasonality when analyzing monotonic trends. Additionally, our data are nonparametric -- they do not come from a population that has a probability distribution with fixed parameters (such as a normal distribution). Additionally, because we are not using daily data and instead found the mean ozone concentration by year and month, temporal autocorrelation is not a large concern. These characteristics of the data eliminate the linear regression, Mann-Kendall, and modified Mann-Kendall tests as possibilities and make the seasonal Mann-Kendall the best option.
+> Answer: The graph for Question 7 exhibits clear seasonal trends; increasing and decreasing ozone concentrations occur in cycles over time. The seasonal Mann-Kendall time series analysis is the only test that accounts for seasonality when analyzing monotonic trends. Our data are also nonparametric -- they do not come from a population that has a probability distribution with fixed parameters (such as a normal distribution). Additionally, because we are not using daily data and instead found the mean ozone concentration by year and month, temporal autocorrelation is not a large concern. These characteristics of the data eliminate the linear regression, Mann-Kendall, and modified Mann-Kendall tests as possibilities and make the seasonal Mann-Kendall the best option.
 
 12. To figure out the slope of the trend, run the function `sea.sens.slope` on the time series dataset. 
 
@@ -147,17 +154,20 @@ Study question: Have ozone concentrations changed over the 2010s at this station
 ```{r}
 # 8
 #Linear interpolation
-GaringerOzone$Daily.Max.8.hour.Ozone.Concentration <- na.approx(GaringerOzone$Daily.Max.8.hour.Ozone.Concentration)
+GaringerOzone$Daily.Max.8.hour.Ozone.Concentration <-
+  na.approx(GaringerOzone$Daily.Max.8.hour.Ozone.Concentration)
 
 # 9
-#Adding Month and Year columns, grouping the df by month/year, and summarizing ozone concentrations by month/year
+#Adding Month and Year columns, grouping the df by month/year, 
+#and summarizing ozone concentrations by month/year
 GaringerOzone.monthly <- GaringerOzone %>%
   mutate(Year = year(Date), 
          Month = month(Date)) %>%
   group_by(Year, Month) %>%
   summarize(Mean.Ozone.Conc = mean(Daily.Max.8.hour.Ozone.Concentration))
 
-#Adding a new Date column that lists each month/year as a complete date including the first day of the month
+#Adding a new Date column that lists each month/year as a complete 
+#date including the first day of the month
 GaringerOzone.monthly$Date <- seq(from = as.Date("2010-01-01"), 
                                   to = as.Date("2019-12-01"), 
                                   by = "month")
@@ -193,4 +203,4 @@ ggplot(data = GaringerOzone.monthly,
 
 Study question: Have ozone concentrations changed over the 2010s at this station? 
 
-> Answer: While there were no significant seasonal trends in mean ozone concentration within individual months from 2010 to 2019, mean ozone concentration significantly decreased overall across the 2010s (z = -1.963, p < 0.05). When quantified as a linear regression, this trend has a slope of -0.0002 -- that is, mean ozone concentration decreases by about 0.0002 ppm with each passing month.
+> Answer: While there were no significant seasonal trends in mean ozone concentration within individual months from 2010 to 2019 at this station, mean ozone concentration significantly decreased overall across the 2010s (z = -1.963, p < 0.05). When quantified as a linear regression, this trend has a slope of -0.0002 -- that is, mean ozone concentration decreases by about 0.0002 ppm with each passing month.

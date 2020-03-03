@@ -215,9 +215,12 @@ The completed exercise is due on Tuesday, March 3 at 1:00 pm.
 
 \NormalTok{Ozone_files_named <-}\StringTok{ }\KeywordTok{list}\NormalTok{()}
 
+
 \ControlFlowTok{for}\NormalTok{(i }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\KeywordTok{length}\NormalTok{(Ozone_files)) \{}
-\NormalTok{  Ozone_files_named[[i]] <-}\StringTok{ }\KeywordTok{assign}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{"GaringerOzone201"}\NormalTok{, i}\DecValTok{-1}\NormalTok{ , }\DataTypeTok{sep =} \StringTok{""}\NormalTok{), }\KeywordTok{read.csv}\NormalTok{(Ozone_files[i]))}
-\NormalTok{\}}
+\NormalTok{  Ozone_files_named[[i]] <-}\StringTok{ }\KeywordTok{assign}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{"GaringerOzone201"}\NormalTok{, }
+\NormalTok{                                         i}\DecValTok{-1}\NormalTok{, }\DataTypeTok{sep =} \StringTok{""}\NormalTok{), }
+                                   \KeywordTok{read.csv}\NormalTok{(Ozone_files[i]))}
+\NormalTok{  \}}
 \end{Highlighting}
 \end{Shaded}
 
@@ -257,231 +260,11 @@ The completed exercise is due on Tuesday, March 3 at 1:00 pm.
 \end{Highlighting}
 \end{Shaded}
 
-\begin{verbatim}
-## [[1]]
-##  [1] "Date"                                
-##  [2] "Source"                              
-##  [3] "Site.ID"                             
-##  [4] "POC"                                 
-##  [5] "Daily.Max.8.hour.Ozone.Concentration"
-##  [6] "UNITS"                               
-##  [7] "DAILY_AQI_VALUE"                     
-##  [8] "Site.Name"                           
-##  [9] "DAILY_OBS_COUNT"                     
-## [10] "PERCENT_COMPLETE"                    
-## [11] "AQS_PARAMETER_CODE"                  
-## [12] "AQS_PARAMETER_DESC"                  
-## [13] "CBSA_CODE"                           
-## [14] "CBSA_NAME"                           
-## [15] "STATE_CODE"                          
-## [16] "STATE"                               
-## [17] "COUNTY_CODE"                         
-## [18] "COUNTY"                              
-## [19] "SITE_LATITUDE"                       
-## [20] "SITE_LONGITUDE"                      
-## 
-## [[2]]
-##  [1] "Date"                                
-##  [2] "Source"                              
-##  [3] "Site.ID"                             
-##  [4] "POC"                                 
-##  [5] "Daily.Max.8.hour.Ozone.Concentration"
-##  [6] "UNITS"                               
-##  [7] "DAILY_AQI_VALUE"                     
-##  [8] "Site.Name"                           
-##  [9] "DAILY_OBS_COUNT"                     
-## [10] "PERCENT_COMPLETE"                    
-## [11] "AQS_PARAMETER_CODE"                  
-## [12] "AQS_PARAMETER_DESC"                  
-## [13] "CBSA_CODE"                           
-## [14] "CBSA_NAME"                           
-## [15] "STATE_CODE"                          
-## [16] "STATE"                               
-## [17] "COUNTY_CODE"                         
-## [18] "COUNTY"                              
-## [19] "SITE_LATITUDE"                       
-## [20] "SITE_LONGITUDE"                      
-## 
-## [[3]]
-##  [1] "Date"                                
-##  [2] "Source"                              
-##  [3] "Site.ID"                             
-##  [4] "POC"                                 
-##  [5] "Daily.Max.8.hour.Ozone.Concentration"
-##  [6] "UNITS"                               
-##  [7] "DAILY_AQI_VALUE"                     
-##  [8] "Site.Name"                           
-##  [9] "DAILY_OBS_COUNT"                     
-## [10] "PERCENT_COMPLETE"                    
-## [11] "AQS_PARAMETER_CODE"                  
-## [12] "AQS_PARAMETER_DESC"                  
-## [13] "CBSA_CODE"                           
-## [14] "CBSA_NAME"                           
-## [15] "STATE_CODE"                          
-## [16] "STATE"                               
-## [17] "COUNTY_CODE"                         
-## [18] "COUNTY"                              
-## [19] "SITE_LATITUDE"                       
-## [20] "SITE_LONGITUDE"                      
-## 
-## [[4]]
-##  [1] "Date"                                
-##  [2] "Source"                              
-##  [3] "Site.ID"                             
-##  [4] "POC"                                 
-##  [5] "Daily.Max.8.hour.Ozone.Concentration"
-##  [6] "UNITS"                               
-##  [7] "DAILY_AQI_VALUE"                     
-##  [8] "Site.Name"                           
-##  [9] "DAILY_OBS_COUNT"                     
-## [10] "PERCENT_COMPLETE"                    
-## [11] "AQS_PARAMETER_CODE"                  
-## [12] "AQS_PARAMETER_DESC"                  
-## [13] "CBSA_CODE"                           
-## [14] "CBSA_NAME"                           
-## [15] "STATE_CODE"                          
-## [16] "STATE"                               
-## [17] "COUNTY_CODE"                         
-## [18] "COUNTY"                              
-## [19] "SITE_LATITUDE"                       
-## [20] "SITE_LONGITUDE"                      
-## 
-## [[5]]
-##  [1] "Date"                                
-##  [2] "Source"                              
-##  [3] "Site.ID"                             
-##  [4] "POC"                                 
-##  [5] "Daily.Max.8.hour.Ozone.Concentration"
-##  [6] "UNITS"                               
-##  [7] "DAILY_AQI_VALUE"                     
-##  [8] "Site.Name"                           
-##  [9] "DAILY_OBS_COUNT"                     
-## [10] "PERCENT_COMPLETE"                    
-## [11] "AQS_PARAMETER_CODE"                  
-## [12] "AQS_PARAMETER_DESC"                  
-## [13] "CBSA_CODE"                           
-## [14] "CBSA_NAME"                           
-## [15] "STATE_CODE"                          
-## [16] "STATE"                               
-## [17] "COUNTY_CODE"                         
-## [18] "COUNTY"                              
-## [19] "SITE_LATITUDE"                       
-## [20] "SITE_LONGITUDE"                      
-## 
-## [[6]]
-##  [1] "Date"                                
-##  [2] "Source"                              
-##  [3] "Site.ID"                             
-##  [4] "POC"                                 
-##  [5] "Daily.Max.8.hour.Ozone.Concentration"
-##  [6] "UNITS"                               
-##  [7] "DAILY_AQI_VALUE"                     
-##  [8] "Site.Name"                           
-##  [9] "DAILY_OBS_COUNT"                     
-## [10] "PERCENT_COMPLETE"                    
-## [11] "AQS_PARAMETER_CODE"                  
-## [12] "AQS_PARAMETER_DESC"                  
-## [13] "CBSA_CODE"                           
-## [14] "CBSA_NAME"                           
-## [15] "STATE_CODE"                          
-## [16] "STATE"                               
-## [17] "COUNTY_CODE"                         
-## [18] "COUNTY"                              
-## [19] "SITE_LATITUDE"                       
-## [20] "SITE_LONGITUDE"                      
-## 
-## [[7]]
-##  [1] "Date"                                
-##  [2] "Source"                              
-##  [3] "Site.ID"                             
-##  [4] "POC"                                 
-##  [5] "Daily.Max.8.hour.Ozone.Concentration"
-##  [6] "UNITS"                               
-##  [7] "DAILY_AQI_VALUE"                     
-##  [8] "Site.Name"                           
-##  [9] "DAILY_OBS_COUNT"                     
-## [10] "PERCENT_COMPLETE"                    
-## [11] "AQS_PARAMETER_CODE"                  
-## [12] "AQS_PARAMETER_DESC"                  
-## [13] "CBSA_CODE"                           
-## [14] "CBSA_NAME"                           
-## [15] "STATE_CODE"                          
-## [16] "STATE"                               
-## [17] "COUNTY_CODE"                         
-## [18] "COUNTY"                              
-## [19] "SITE_LATITUDE"                       
-## [20] "SITE_LONGITUDE"                      
-## 
-## [[8]]
-##  [1] "Date"                                
-##  [2] "Source"                              
-##  [3] "Site.ID"                             
-##  [4] "POC"                                 
-##  [5] "Daily.Max.8.hour.Ozone.Concentration"
-##  [6] "UNITS"                               
-##  [7] "DAILY_AQI_VALUE"                     
-##  [8] "Site.Name"                           
-##  [9] "DAILY_OBS_COUNT"                     
-## [10] "PERCENT_COMPLETE"                    
-## [11] "AQS_PARAMETER_CODE"                  
-## [12] "AQS_PARAMETER_DESC"                  
-## [13] "CBSA_CODE"                           
-## [14] "CBSA_NAME"                           
-## [15] "STATE_CODE"                          
-## [16] "STATE"                               
-## [17] "COUNTY_CODE"                         
-## [18] "COUNTY"                              
-## [19] "SITE_LATITUDE"                       
-## [20] "SITE_LONGITUDE"                      
-## 
-## [[9]]
-##  [1] "Date"                                
-##  [2] "Source"                              
-##  [3] "Site.ID"                             
-##  [4] "POC"                                 
-##  [5] "Daily.Max.8.hour.Ozone.Concentration"
-##  [6] "UNITS"                               
-##  [7] "DAILY_AQI_VALUE"                     
-##  [8] "Site.Name"                           
-##  [9] "DAILY_OBS_COUNT"                     
-## [10] "PERCENT_COMPLETE"                    
-## [11] "AQS_PARAMETER_CODE"                  
-## [12] "AQS_PARAMETER_DESC"                  
-## [13] "CBSA_CODE"                           
-## [14] "CBSA_NAME"                           
-## [15] "STATE_CODE"                          
-## [16] "STATE"                               
-## [17] "COUNTY_CODE"                         
-## [18] "COUNTY"                              
-## [19] "SITE_LATITUDE"                       
-## [20] "SITE_LONGITUDE"                      
-## 
-## [[10]]
-##  [1] "Date"                                
-##  [2] "Source"                              
-##  [3] "Site.ID"                             
-##  [4] "POC"                                 
-##  [5] "Daily.Max.8.hour.Ozone.Concentration"
-##  [6] "UNITS"                               
-##  [7] "DAILY_AQI_VALUE"                     
-##  [8] "Site.Name"                           
-##  [9] "DAILY_OBS_COUNT"                     
-## [10] "PERCENT_COMPLETE"                    
-## [11] "AQS_PARAMETER_CODE"                  
-## [12] "AQS_PARAMETER_DESC"                  
-## [13] "CBSA_CODE"                           
-## [14] "CBSA_NAME"                           
-## [15] "STATE_CODE"                          
-## [16] "STATE"                               
-## [17] "COUNTY_CODE"                         
-## [18] "COUNTY"                              
-## [19] "SITE_LATITUDE"                       
-## [20] "SITE_LONGITUDE"
-\end{verbatim}
-
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{#Combining datasets into one using rbind_list; rbind_list was used so the dataframes could be bound from the list created above. To use just rbind, the code would have looked like this:}
+\CommentTok{#Combining datasets into one; rbind_list was used so the dataframes}
+\CommentTok{#could be bound from the list created above. To use just rbind, the}
+\CommentTok{#code would have looked like this:}
 
 \CommentTok{#GaringerOzone <- rbind(GaringerOzone2010, GaringerOzone2011, }
                             \CommentTok{#GaringerOzone2012, GaringerOzone2013,}
@@ -490,70 +273,11 @@ The completed exercise is due on Tuesday, March 3 at 1:00 pm.
                             \CommentTok{#GaringerOzone2018,GaringerOzone2019)}
 
 \NormalTok{GaringerOzone <-}\StringTok{ }\KeywordTok{rbind_list}\NormalTok{(Ozone_files_named)}
-\end{Highlighting}
-\end{Shaded}
 
-\begin{verbatim}
-## Warning: 'rbind_list' is deprecated.
-## Use 'bind_rows()' instead.
-## See help("Deprecated")
-\end{verbatim}
-
-\begin{verbatim}
-## Warning in bind_rows_(list_or_dots(...), id = NULL): Unequal factor levels:
-## coercing to character
-\end{verbatim}
-
-\begin{verbatim}
-## Warning in bind_rows_(list_or_dots(...), id = NULL): binding character and
-## factor vector, coercing into character vector
-
-## Warning in bind_rows_(list_or_dots(...), id = NULL): binding character and
-## factor vector, coercing into character vector
-
-## Warning in bind_rows_(list_or_dots(...), id = NULL): binding character and
-## factor vector, coercing into character vector
-
-## Warning in bind_rows_(list_or_dots(...), id = NULL): binding character and
-## factor vector, coercing into character vector
-
-## Warning in bind_rows_(list_or_dots(...), id = NULL): binding character and
-## factor vector, coercing into character vector
-
-## Warning in bind_rows_(list_or_dots(...), id = NULL): binding character and
-## factor vector, coercing into character vector
-
-## Warning in bind_rows_(list_or_dots(...), id = NULL): binding character and
-## factor vector, coercing into character vector
-
-## Warning in bind_rows_(list_or_dots(...), id = NULL): binding character and
-## factor vector, coercing into character vector
-
-## Warning in bind_rows_(list_or_dots(...), id = NULL): binding character and
-## factor vector, coercing into character vector
-
-## Warning in bind_rows_(list_or_dots(...), id = NULL): binding character and
-## factor vector, coercing into character vector
-\end{verbatim}
-
-\begin{verbatim}
-## Warning in bind_rows_(list_or_dots(...), id = NULL): Unequal factor levels:
-## coercing to character
-\end{verbatim}
-
-\begin{verbatim}
-## Warning in bind_rows_(list_or_dots(...), id = NULL): binding character and
-## factor vector, coercing into character vector
-
-## Warning in bind_rows_(list_or_dots(...), id = NULL): binding character and
-## factor vector, coercing into character vector
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
 \CommentTok{# 3}
 \CommentTok{#Changing date column to date format}
-\NormalTok{GaringerOzone}\OperatorTok{$}\NormalTok{Date <-}\StringTok{ }\KeywordTok{as.Date}\NormalTok{(GaringerOzone}\OperatorTok{$}\NormalTok{Date, }\DataTypeTok{format =} \StringTok{"%m/%d/%Y"}\NormalTok{)}
+\NormalTok{GaringerOzone}\OperatorTok{$}\NormalTok{Date <-}\StringTok{ }\KeywordTok{as.Date}\NormalTok{(GaringerOzone}\OperatorTok{$}\NormalTok{Date, }
+                              \DataTypeTok{format =} \StringTok{"%m/%d/%Y"}\NormalTok{)}
 
 \CommentTok{# 4}
 \CommentTok{#Selecting necessary columns}
@@ -565,20 +289,13 @@ The completed exercise is due on Tuesday, March 3 at 1:00 pm.
 \NormalTok{Days <-}\StringTok{ }\KeywordTok{as.data.frame}\NormalTok{(}\KeywordTok{seq}\NormalTok{(}\DataTypeTok{from =} \KeywordTok{as.Date}\NormalTok{(}\StringTok{"2010-01-01"}\NormalTok{), }\DataTypeTok{to =} 
                             \KeywordTok{as.Date}\NormalTok{(}\StringTok{"2019-12-31"}\NormalTok{), }\DataTypeTok{by =} \DecValTok{1}\NormalTok{))}
 
-\NormalTok{Days <-}\StringTok{ }\KeywordTok{rename}\NormalTok{(Days, }\StringTok{"Date"}\NormalTok{ =}\StringTok{ "seq(from = as.Date(}\CharTok{\textbackslash{}"}\StringTok{2010-01-01}\CharTok{\textbackslash{}"}\StringTok{), to = as.Date(}\CharTok{\textbackslash{}"}\StringTok{2019-12-31}\CharTok{\textbackslash{}"}\StringTok{), by = 1)"}\NormalTok{)}
+\NormalTok{Days <-}\StringTok{ }\KeywordTok{rename}\NormalTok{(Days, }\StringTok{"Date"}\NormalTok{ =}\StringTok{ }
+\StringTok{                 "seq(from = as.Date(}\CharTok{\textbackslash{}"}\StringTok{2010-01-01}\CharTok{\textbackslash{}"}\StringTok{), to = as.Date(}\CharTok{\textbackslash{}"}\StringTok{2019-12-31}\CharTok{\textbackslash{}"}\StringTok{), by = 1)"}\NormalTok{)}
  
 \CommentTok{# 6}
 \CommentTok{#Joining the data frames and checking the dimensions}
 \NormalTok{GaringerOzone <-}\StringTok{ }\KeywordTok{left_join}\NormalTok{(Days, GaringerOzone.wr)}
-\end{Highlighting}
-\end{Shaded}
 
-\begin{verbatim}
-## Joining, by = "Date"
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
 \KeywordTok{dim}\NormalTok{(GaringerOzone)}
 \end{Highlighting}
 \end{Shaded}
@@ -606,11 +323,11 @@ The completed exercise is due on Tuesday, March 3 at 1:00 pm.
 \KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ GaringerOzone, }
        \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Date, }\DataTypeTok{y =}\NormalTok{ Daily.Max.}\FloatTok{8.}\NormalTok{hour.Ozone.Concentration)) }\OperatorTok{+}
 \StringTok{  }\KeywordTok{geom_line}\NormalTok{() }\OperatorTok{+}
-\StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{y =} \StringTok{"Max 8 hour Ozone Conc (ppm)"}\NormalTok{)}
+\StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{y =} \StringTok{"Max 8 hour Ozone Concentration (ppm)"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{A08_TimeSeries_files/figure-latex/unnamed-chunk-3-1.pdf}
+\includegraphics{A08_TimeSeries_files/figure-latex/unnamed-chunk-5-1.pdf}
 
 \hypertarget{time-series-analysis}{%
 \subsection{Time Series Analysis}\label{time-series-analysis}}
@@ -629,7 +346,17 @@ station?
 \end{enumerate}
 
 \begin{quote}
-Answer: ???
+Answer: Piecewise constant interpolation would fill missing data values
+with measurements taken immediately before or after the absent data
+points. Because this dataset appears to be highly variable at times,
+using measurements identical to adjacent data points may not result in
+accurate estimations. A spline interpolation would use a quadratic or
+other low-degree polynomial equation to populate missing values.
+However, non-linear functions are not being used to describe or depict
+the data currently; existing data points are connected using lines.
+Approximating data with a spline interpolation would result in data
+points being connected more smoothly than they would have been had
+actual observations been present.
 \end{quote}
 
 \begin{enumerate}
@@ -651,7 +378,18 @@ Answer: ???
 \end{enumerate}
 
 \begin{quote}
-Answer: ???
+Answer: The graph for Question 7 exhibits clear seasonal trends;
+increasing and decreasing ozone concentrations occur in cycles over
+time. The seasonal Mann-Kendall time series analysis is the only test
+that accounts for seasonality when analyzing monotonic trends. Our data
+are also nonparametric -- they do not come from a population that has a
+probability distribution with fixed parameters (such as a normal
+distribution). Additionally, because we are not using daily data and
+instead found the mean ozone concentration by year and month, temporal
+autocorrelation is not a large concern. These characteristics of the
+data eliminate the linear regression, Mann-Kendall, and modified
+Mann-Kendall tests as possibilities and make the seasonal Mann-Kendall
+the best option.
 \end{quote}
 
 \begin{enumerate}
@@ -671,28 +409,53 @@ Answer: ???
 \begin{Highlighting}[]
 \CommentTok{# 8}
 \CommentTok{#Linear interpolation}
-\NormalTok{GaringerOzone}\OperatorTok{$}\NormalTok{Daily.Max.}\FloatTok{8.}\NormalTok{hour.Ozone.Concentration <-}\StringTok{ }\KeywordTok{na.approx}\NormalTok{(GaringerOzone}\OperatorTok{$}\NormalTok{Daily.Max.}\FloatTok{8.}\NormalTok{hour.Ozone.Concentration)}
+\NormalTok{GaringerOzone}\OperatorTok{$}\NormalTok{Daily.Max.}\FloatTok{8.}\NormalTok{hour.Ozone.Concentration <-}
+\StringTok{  }\KeywordTok{na.approx}\NormalTok{(GaringerOzone}\OperatorTok{$}\NormalTok{Daily.Max.}\FloatTok{8.}\NormalTok{hour.Ozone.Concentration)}
 
 \CommentTok{# 9}
-\CommentTok{#Adding Month and Year columns, grouping the df by month/year, and summarizing ozone concentrations by month/year}
+\CommentTok{#Adding Month and Year columns, grouping the df by month/year, }
+\CommentTok{#and summarizing ozone concentrations by month/year}
 \NormalTok{GaringerOzone.monthly <-}\StringTok{ }\NormalTok{GaringerOzone }\OperatorTok{%>%}
-\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{Year =} \KeywordTok{year}\NormalTok{(Date), }\DataTypeTok{Month =} \KeywordTok{month}\NormalTok{(Date)) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{Year =} \KeywordTok{year}\NormalTok{(Date), }
+         \DataTypeTok{Month =} \KeywordTok{month}\NormalTok{(Date)) }\OperatorTok{%>%}
 \StringTok{  }\KeywordTok{group_by}\NormalTok{(Year, Month) }\OperatorTok{%>%}
 \StringTok{  }\KeywordTok{summarize}\NormalTok{(}\DataTypeTok{Mean.Ozone.Conc =} \KeywordTok{mean}\NormalTok{(Daily.Max.}\FloatTok{8.}\NormalTok{hour.Ozone.Concentration))}
 
-\CommentTok{#Adding a new Date column that lists each month/year as a complete date including the first day of the month}
-\NormalTok{GaringerOzone.monthly}\OperatorTok{$}\NormalTok{Date <-}\StringTok{ }\KeywordTok{seq}\NormalTok{(}\DataTypeTok{from =} \KeywordTok{as.Date}\NormalTok{(}\StringTok{"2010-01-01"}\NormalTok{), }\DataTypeTok{to =} 
-                            \KeywordTok{as.Date}\NormalTok{(}\StringTok{"2019-12-01"}\NormalTok{), }\DataTypeTok{by =} \StringTok{"month"}\NormalTok{)}
+\CommentTok{#Adding a new Date column that lists each month/year as a complete }
+\CommentTok{#date including the first day of the month}
+\NormalTok{GaringerOzone.monthly}\OperatorTok{$}\NormalTok{Date <-}\StringTok{ }\KeywordTok{seq}\NormalTok{(}\DataTypeTok{from =} \KeywordTok{as.Date}\NormalTok{(}\StringTok{"2010-01-01"}\NormalTok{), }
+                                  \DataTypeTok{to =} \KeywordTok{as.Date}\NormalTok{(}\StringTok{"2019-12-01"}\NormalTok{), }
+                                  \DataTypeTok{by =} \StringTok{"month"}\NormalTok{)}
 
 \CommentTok{# 10}
 \CommentTok{#Creating a time series}
-\NormalTok{GaringerOzone.monthly.ts <-}\StringTok{ }\KeywordTok{ts}\NormalTok{(}
-\NormalTok{  GaringerOzone.monthly}\OperatorTok{$}\NormalTok{Mean.Ozone.Conc, }\DataTypeTok{frequency =} \DecValTok{12}\NormalTok{, }
-                        \DataTypeTok{start =} \KeywordTok{c}\NormalTok{(}\DecValTok{2010}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{), }\DataTypeTok{end =} \KeywordTok{c}\NormalTok{(}\DecValTok{2019}\NormalTok{, }\DecValTok{12}\NormalTok{, }\DecValTok{1}\NormalTok{))}
+\NormalTok{GaringerOzone.monthly.ts <-}\StringTok{ }\KeywordTok{ts}\NormalTok{(GaringerOzone.monthly}\OperatorTok{$}\NormalTok{Mean.Ozone.Conc,}
+                               \DataTypeTok{frequency =} \DecValTok{12}\NormalTok{,}
+                               \DataTypeTok{start =} \KeywordTok{c}\NormalTok{(}\DecValTok{2010}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{), }
+                               \DataTypeTok{end =} \KeywordTok{c}\NormalTok{(}\DecValTok{2019}\NormalTok{, }\DecValTok{12}\NormalTok{, }\DecValTok{1}\NormalTok{))}
 
 \CommentTok{# 11}
 \CommentTok{#Running a time series analysis (smk)}
 \NormalTok{GaringerOzone.monthly.trend <-}\StringTok{ }\KeywordTok{smk.test}\NormalTok{(GaringerOzone.monthly.ts)}
+
+\NormalTok{GaringerOzone.monthly.trend}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Seasonal Mann-Kendall trend test (Hirsch-Slack test)
+## 
+## data:  GaringerOzone.monthly.ts
+## z = -1.963, p-value = 0.04965
+## alternative hypothesis: true S is not equal to 0
+## sample estimates:
+##    S varS 
+##  -77 1499
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
 \KeywordTok{summary}\NormalTok{(GaringerOzone.monthly.trend)}
 \end{Highlighting}
 \end{Shaded}
@@ -742,11 +505,11 @@ Answer: ???
        \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Date, }\DataTypeTok{y =}\NormalTok{ Mean.Ozone.Conc)) }\OperatorTok{+}
 \StringTok{  }\KeywordTok{geom_line}\NormalTok{() }\OperatorTok{+}
 \StringTok{  }\KeywordTok{geom_point}\NormalTok{() }\OperatorTok{+}
-\StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{y =} \StringTok{"Mean Max 8 hour Ozone Conc (ppm)"}\NormalTok{)}
+\StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{y =} \StringTok{"Mean monthly ozone concentration (ppm)"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{A08_TimeSeries_files/figure-latex/unnamed-chunk-4-1.pdf}
+\includegraphics{A08_TimeSeries_files/figure-latex/unnamed-chunk-6-1.pdf}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -759,8 +522,16 @@ Answer: ???
   sentences in your interpretation.
 \end{enumerate}
 
+Study question: Have ozone concentrations changed over the 2010s at this
+station?
+
 \begin{quote}
-Answer:
+Answer: While there were no significant seasonal trends in mean ozone
+concentration within individual months from 2010 to 2019 at this
+station, mean ozone concentration significantly decreased overall across
+the 2010s (z = -1.963, p \textless{} 0.05). When quantified as a linear
+regression, this trend has a slope of -0.0002 -- that is, mean ozone
+concentration decreases by about 0.0002 ppm with each passing month.
 \end{quote}
 
 
