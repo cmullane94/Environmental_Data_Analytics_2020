@@ -43,37 +43,15 @@ deftheme <- theme_classic(base_size = 14) +
         legend.position = "right")
 theme_set(deftheme)
 
-#Importing datasets
+#Importing datasets and placing them into a list
+Ozone_files <- list.files(path = "./Data/Raw/Ozone_TimeSeries/", 
+                         pattern="*.csv", full.names=TRUE)
 
-GaringerOzone2010 <- read.csv("./Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2010_raw.csv")
-GaringerOzone2011 <- read.csv("./Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2011_raw.csv")
-GaringerOzone2012 <- read.csv("./Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2012_raw.csv")
-GaringerOzone2013 <- read.csv("./Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2013_raw.csv")
-GaringerOzone2015 <- read.csv("./Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2014_raw.csv")
-GaringerOzone2016 <- read.csv("./Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2015_raw.csv")
-GaringerOzone2017 <- read.csv("./Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2016_raw.csv")
-GaringerOzone2018 <- read.csv("./Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2017_raw.csv")
-GaringerOzone2019 <- read.csv("./Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2018_raw.csv")
+Ozone_files_named <- list()
 
-
-#Ozone_files <- list.files(path = "./Data/Raw/Ozone_TimeSeries/", 
-                         #pattern="*.csv", full.names=TRUE)
-
-#for(i in Ozone_files) {
-  #for(j in 0:9) {
-      #assign(paste("GaringerOzone201", j, sep=""), read.csv(i))
-  #}
-#}
-
-
-Ozone_files_named <- list(GaringerOzone2010, GaringerOzone2011, 
-                            GaringerOzone2012, GaringerOzone2013,
-                            GaringerOzone2014, GaringerOzone2015,
-                            GaringerOzone2016, GaringerOzone2017,
-                            GaringerOzone2018,GaringerOzone2019)
-
-#Checking column names to decide whether to use join vs. rbind
-lapply(Ozone_files_named, colnames)
+for(i in 1:length(Ozone_files)) {
+  Ozone_files_named[[i]] <- assign(paste("GaringerOzone201", i-1 , sep = ""), read.csv(Ozone_files[i]))
+}
 
 ```
 
@@ -91,16 +69,21 @@ lapply(Ozone_files_named, colnames)
 
 ```{r}
 # 2 
-#Combining datasets into one using rbind
-GaringerOzone <- rbind(GaringerOzone2010, GaringerOzone2011, 
-                            GaringerOzone2012, GaringerOzone2013,
-                            GaringerOzone2014, GaringerOzone2015,
-                            GaringerOzone2016, GaringerOzone2017,
-                            GaringerOzone2018,GaringerOzone2019)
+#Checking column names to decide whether to use join vs. rbind
+lapply(Ozone_files_named, colnames)
+
+#Combining datasets into one using rbind_list; rbind_list was used so the dataframes could be bound from the list created above. To use just rbind, the code would have looked like this:
+
+#GaringerOzone <- rbind(GaringerOzone2010, GaringerOzone2011, 
+                            #GaringerOzone2012, GaringerOzone2013,
+                            #GaringerOzone2014, GaringerOzone2015,
+                            #GaringerOzone2016, GaringerOzone2017,
+                            #GaringerOzone2018,GaringerOzone2019)
+
+GaringerOzone <- rbind_list(Ozone_files_named)
 
 # 3
 #Changing date column to date format
-
 GaringerOzone$Date <- as.Date(GaringerOzone$Date, format = "%m/%d/%Y")
 
 # 4
@@ -109,11 +92,11 @@ GaringerOzone.wr <- GaringerOzone %>%
   select(Date, Daily.Max.8.hour.Ozone.Concentration, DAILY_AQI_VALUE)
 
 # 5
-#Creating a days data frame
+#Creating a days data frame with a column called "Date"
 Days <- as.data.frame(seq(from = as.Date("2010-01-01"), to = 
                             as.Date("2019-12-31"), by = 1))
- 
-names(Days)[names(Days) == "seq(from = as.Date(\"2010-01-01\"), to = as.Date(\"2019-12-31\"), by = 1)"] <- "Date"
+
+Days <- rename(Days, "Date" = "seq(from = as.Date(\"2010-01-01\"), to = as.Date(\"2019-12-31\"), by = 1)")
  
 # 6
 #Joining the data frames and checking the dimensions
@@ -127,6 +110,7 @@ dim(GaringerOzone)
 7. Create a ggplot depicting ozone concentrations over time. In this case, we will plot actual concentrations in ppm, not AQI values. Format your axes accordingly.
 
 ```{r}
+#Plotting ozone concentrations over time
 ggplot(data = GaringerOzone, 
        aes(x = Date, y = Daily.Max.8.hour.Ozone.Concentration)) +
   geom_line() +
