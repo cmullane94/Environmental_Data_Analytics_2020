@@ -409,6 +409,11 @@ gages <- gages_raw
 # add your code here
 southeast_state_bounds <- southeast_state_bounds_raw
 
+#Added: checking coordinate systems on all datasets
+st_crs(gages)
+st_crs(basins_nf_seplains)
+st_crs(southeast_state_bounds)
+
 ####################Skipped the rest of this chunk###################
 
 # projecting to North America Albers Equal Area Conic
@@ -547,10 +552,14 @@ Use your knowledge of sf and the tidyverse to select a single state from southea
 Bonus: What are some other spatial operations (or confirmations) that you could carry out with the three spatial datasets?
 
 ```{r activity.gages.select}
+
+####FINISH THIS CHUNK
 # select a state, here I'm choosing North Carolina (NC)
 # add your code here
-
-southeast_state_bounds_NC<- filter(southeast_state_bounds, NAME == "North Carolina")
+#Selects only the geometry
+southeast_state_bounds_VA<- southeast_state_bounds %>%
+  filter(NAME == "North Carolina") %>%
+  st_geometry()
 
 # check
 # add your code here
