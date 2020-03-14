@@ -130,6 +130,8 @@ The raster package has *some* ability to interact with tidyverse functions. You 
 
 The *sp* package is the first iteration of an R package created to handle vector spatial data. Given the likelihood that you'll come across old code, it's helpful to be familiar with both the older sp package and it's newer version, the sf package.
 
+***The sp package is the older version of the sf package
+
 **Things to Know About sp:**
 
 * Developed in 2005
@@ -211,6 +213,7 @@ There are two main ways to define a CRS in sf:
 As long as one of these is defined, you can move on. However, if you want to define both, that might prove less confusing to your future-self. :)
 
 #### 1.7.3 Coordinate Systems Websites
+***I don't really understand what these do?
 
 Various websites provide free services to look-up CRS definitions, characteristics, and transformations
 
@@ -312,14 +315,19 @@ Use base R commands to answer the following questions (for basins_nf_seplains_ra
 #1
 class(basins_nf_seplains_raw)
 #2 
+names(basins_nf_seplains_raw)
 colnames(basins_nf_seplains_raw)
 #3
+length(colnames(basins_nf_seplains_raw))
 dim(basins_nf_seplains_raw)
-#
+#4
+attributes(basins_nf_seplains_raw)
 #5
 head(basins_nf_seplains_raw)
 
 # bonus, add your code here
+glimpse(basins_nf_seplains_raw)
+summary(basins_nf_seplains_raw)
 ```
 
 While not in base, you can also use glimpse() from the tibble (tidyverse) package to look at basin_nf_seplains_raw.
@@ -371,6 +379,8 @@ Project a CRS by:
 
 I noticed if you tried to define proj4text inside st_crs() your data is converted to class CRS (not sf). The same thing happens if you set value to the proj4 string or EPSG code. I'm not sure why changing the data to a CRS object is the default. Also, sometimes its helpful to define your proj4 string or EPSG code as a variable like my_proj4 or my_epsg so you can use it throughout your code without having to change it every time.
 
+^?????
+
 #### 2.5.1 A Note on Figuring Out CRS Information
 
 You can always use [espg.io](http://epsg.io/) for help or open up the spatial data in your favorite GIS software, if you really get stuck. For example, QGIS gives the ESPG code of spatial data in the lower right-hand corner (assuming it is defined). If it is not defined, you should visit the documentation associated with the spatial data for the CRS information.
@@ -392,38 +402,51 @@ my_proj4 <- "+proj=aea +lat_1=29.5 +lat_2=45.5 +lat_0=23 +lon_0=-96 +x_0=0 +y_0=
 my_epsg <- 5070
 
 # setting projections
-# set the proj4 string first and then set the EPSG code (because proj4 will over-ride EPSG if you set EPSG first)
+### set the proj4 string first and then set the EPSG code (because proj4 will over-ride EPSG if you set EPSG first)
 # add your code here
-st_crs(basins_nf_seplains_raw) <- my_epsg
-st_crs(gages_raw) <- my_epsg
-
 # basins
 basins_nf_seplains <- basins_nf_seplains_raw
+st_crs(basins_nf_seplains) <- my_proj4
+basins_nf_seplains <- basins_nf_seplains %>%
+  st_set_crs(my_epsg)
+st_crs(basins_nf_seplains)
 
 # add your code here
 # gages
 gages <- gages_raw
-
+st_crs(gages) <- my_proj4
+st_crs(gages) <- my_epsg
+st_crs(gages) 
 # state bounds
 # this one looks good so you don't need to do anything but here's the code anyway
 # add your code here
 southeast_state_bounds <- southeast_state_bounds_raw
-
-#Added: checking coordinate systems on all datasets
-st_crs(gages)
-st_crs(basins_nf_seplains)
-st_crs(southeast_state_bounds)
-
-####################Skipped the rest of this chunk###################
+st_crs(southeast_state_bounds) <- my_proj4
+st_crs(southeast_state_bounds) <- my_epsg
+st_crs(southeast_state_bounds) 
 
 # projecting to North America Albers Equal Area Conic
 # add your code here
-na_albers_proj4 <- 
-na_albers_epsg <- 
+na_albers_proj4 <- "+proj=aea +lat_1=20 +lat_2=60 +lat_0=40 +lon_0=-96 +x_0=0 +y_0=0 +datum=NAD83 +units=m +no_defs"
+na_albers_epsg <- 102008
 # set the proj4 string first and then set the EPSG code (because proj4 will over-ride EPSG if you set EPSG first)
+southeast_state_bounds_na_albers <- st_transform(x = southeast_state_bounds, crs = na_albers_proj4)
+st_crs(southeast_state_bounds_na_albers) <- na_albers_epsg
+
+OR
+
+southeast_state_bounds_na_albers <-  sf::st_transform(southeast_state_bounds, crs = na_albers_proj4) %>%
+  st_set_crs(na_albers_epsg)
+
+#There may be multiple functions with the same name in multiple packages. The double colon operator allows you to specify the specific function you want:
+#package::functionname
 
 # check CRSs
 # add your code here
+st_crs(basins_nf_seplains)
+st_crs(gages)
+st_crs(southeast_state_bounds)
+st_crs(southeast_state_bounds_na_albers)
 ```
 
 ### 2.6 Converting sp Objects to sf Objects and Vice Versa
