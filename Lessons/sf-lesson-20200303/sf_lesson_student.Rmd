@@ -514,11 +514,11 @@ There are numerous spatial operations, we can run on spatial data.
 
 What are some things you might want to do with the three spatial datasets we have here? Brainstorm these with a partner and if you have time, look through the sf package help to see what types of commands you might use.
 
-For example, you might want to select a state from southeast_state_bounds and find it's area. You might want to find how many gages are inside that state.
+For example, you might want to select a state from southeast_state_bounds and find its area. You might want to find how many gages are inside that state.
 
 #### 3.1.1 A Note on Spatial Geometry
 
-In some cases, we might not necessarily need the tabular data associated with a spatial dataset. For example, say you decide that you just want to look at GAGES-II data in North Carolina. Once you have the boundary lines for North Carolina you might not need all the spatial data associate with it. You can remove the tabular data using the st_geometry() command. Sometimes it helps to speed up plotting if you don't have the tabular data for a big spatial dataset.
+In some cases, we might not necessarily need the tabular data associated with a spatial dataset. For example, say you decide that you just want to look at GAGES-II data in North Carolina. Once you have the boundary lines for North Carolina you might not need all the spatial data associated with it. You can remove the tabular data using the st_geometry() command. Sometimes it helps to speed up plotting if you don't have the tabular data for a big spatial dataset.
 
 ```{r isolating.geometry}
 # tabular data is attached
@@ -572,6 +572,8 @@ Also, sometimes the differences between these operations can be confusing/not ob
 
 Use your knowledge of sf and the tidyverse to select a single state from southeast_state_bounds. Next, drop the geometry and use the state boundary to select watersheds and stream gages that intersect with the state.
 
+***Drop the geometry??
+
 Bonus: What are some other spatial operations (or confirmations) that you could carry out with the three spatial datasets?
 
 ```{r activity.gages.select}
@@ -580,22 +582,34 @@ Bonus: What are some other spatial operations (or confirmations) that you could 
 # select a state, here I'm choosing North Carolina (NC)
 # add your code here
 #Selects only the geometry
-southeast_state_bounds_VA<- southeast_state_bounds %>%
+head(southeast_state_bounds)
+southeast_state_bounds_NC<- southeast_state_bounds %>%
   filter(NAME == "North Carolina") %>%
   st_geometry()
 
 # check
 # add your code here
+head(southeast_state_bounds_NC)
 
 # select watersheds that intersect with NC bounds
 # add your code here
+nc_basins_nf_seplains <- st_intersection(basins_nf_seplains, southeast_state_bounds_NC)
+
+#As a pipe
+nc_basins_nf_seplains <- basins_nf_seplains %>%
+  st_intersection(southeast_state_bounds_NC)
 
 # check
 # add your code here
+head(nc_basins_nf_seplains)
 
 # select gages that fall within NC bounds
 # add your code here
+nc_gages <- st_intersection(basins_nf_seplains, gages)
 
+#As a pipe:
+nc_gages <- gages %>%
+  st_intersection(southeast_state_bounds_NC)
 # bonus
 # add your code here
 ```
