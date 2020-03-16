@@ -48,9 +48,9 @@ library("tidyr")
 library("ggplot2")
 library("purrr")
 # some spatial data packages
-install.packages("sf")
-install.packages("ggmap")
-install.packages("here")
+#install.packages("sf")
+#install.packages("ggmap")
+#install.packages("here")
 library("sf")
 library("ggmap")
 # some other packages
@@ -656,7 +656,9 @@ Let's check your operations from the 3.1.2 activity. You are trying for somethin
 ```{r activity.checking.operations}
 # plot NC watershed boundardies from 3.1.2
 pdf(here("outputs", "spatial_operations_test_fig.pdf"), width = 11, height = 8.5)
-# add your code here
+ggplot(data = nc_basins_nf_seplains) + 
+  geom_sf() +
+  theme_classic()
 dev.off()
 ```
 
@@ -676,7 +678,7 @@ nc_state_bounds_geom <- southeast_state_bounds %>%
 nc_bbox <- nc_state_bounds_geom %>%
   st_buffer(dist = 150000) %>% # this value is very arbitrary just wanting to make a large buffer around geometry
   st_transform(4326) %>% # WGS84 (for lat and long)
-  st_bbox()
+  st_bbox() #Returns the bounding of a simple feature/simple feature set
 nc_bbox # check
 
 # fix bounding box columns so they match what is needed for the ggmap::get_map() function
@@ -686,6 +688,7 @@ nc_bbox_fix <- c(left = nc_bbox[[1]], bottom = nc_bbox[[2]], right = nc_bbox[[3]
 nc_bbox_fix
 
 # get basemap
+#get_map is a smart wrapper that queries the Google Maps, OpenStreetMap, Stamen Maps or Naver Map servers for a map
 nc_basemap <- get_map(nc_bbox_fix, maptype = 'terrain-background', source = 'stamen', zoom = 8)
 class(nc_basemap)
 st_crs(nc_basemap)
@@ -713,24 +716,48 @@ ggmap(nc_basemap) +
 dev.off()
 
 # bonus
-# try chaning the zoom on get_map() and see what happens
+# try changing the zoom on get_map() and see what happens
 # look at the help menu for more information on the zoom range
 ```
 
 **Activity**
 
 Can you reproduce Figure 1b?
+***1b was skipped in the answer key
 
 ```{r activity.reproducing.figure1b}
 # select NC
 # add your code here
+southeast_state_bounds_NC<- southeast_state_bounds %>%
+  filter(NAME == "North Carolina") %>%
+  st_geometry()
 
 # make figure 1b
 # find watersheds that overlap with NC (want the whole watershed, not just the part of the watershe that's inside the NC bounds)
 # add your code here
 
+nc_basins_nf_seplains <- st_intersection(southeast_state_bounds_NC, basins_nf_seplains)
+
+#######Attempting to obtain full watersheds that overlap with NC
+
+nc_basins_nf_seplains <- st_contains(basins_nf_seplains, southeast_state_bounds_NC)
+
+st_as_sf(nc_basins_nf_seplains)
+
 # look at result
 # add your code here
+basins_nf_seplains_geom <- st_geometry(basins_nf_seplains)
+
+###Trying to see what the original watersheds look like -- it worked, just took awhile
+pdf(here("outputs", "nc_watersheds_only_test.pdf"), width = 11, height = 8.5)
+ggplot(data = basins_nf_seplains_geom) +
+  geom_sf()
+  dev.off()
+
+pdf(here("outputs", "nc_watersheds_test.pdf"), width = 11, height = 8.5)
+ggplot(data = nc_basins_nf_seplains) +
+  geom_sf()
+  dev.off()
 
 # make a function to convert binary to logic
 # add your code here
@@ -790,6 +817,11 @@ names(nc_gages)
 # use "STAID"
 
 # join the tabular data to nc_gages
+#Changing them both to factors causes NAs in joined data and a warning message; use numeric classes
+
+nc_gages$STAID <- as.numeric(nc_gages$STAID)
+my_tabular_data_raw$STAID <- as.numeric(my_tabular_data_raw$STAID)
+
 nc_gages_climate <- nc_gages %>%
   left_join(my_tabular_data_raw, by = "STAID")
 
@@ -818,15 +850,36 @@ Practice joining other types of tabular data onto the spatial datasets provided 
 # use NC overlapping watersheds from 3.2.2
 # add your code here
 
+names(nc_basins_nf_seplains) 
+
+nc_basins_nf_seplains <- rename(nc_basins_nf_seplains, STAID = GAGE_ID)
+nc_basins_nf_seplains$STAID <- as.numeric(nc_basins_nf_seplains$STAID)
+
+#Could do in one line of code:
+
+nc_basins_overlap_sel_fix <- nc_basins_overlap_sel %>%
+  mutate(STAID = as.character(GAGE_ID)) 
+
 # join tabular data
 # add your code here
+
+nc_watersheds_join <- nc_basins_nf_seplains %>%
+  left_join(my_tabular_data_raw, by = "STAID")
 
 # check result
 # add your code here
 
+names(nc_watersheds_join)
+
 # plot
 pdf(here("outputs", "nc_basins_by_tabular_data.pdf"), width = 11, height = 8.5)
 # add your code here
+ggplot(data = nc_watersheds_join, aes(fill = WD_BASIN)) +
+  geom_sf() +
+  geom_sf(data = nc_state_bounds_geom, fill = NA) +
+  scale_fill_gradient(low = "white", high = "blue") +
+  labs(fill = "Watershed Avg. Annual # Days with Precipitation") +
+  theme_bw()
 dev.off()
 ```
 
@@ -848,6 +901,7 @@ Try saving another spatial dataset you created in Sections 3.1 or 3.3.
 ```{r activity.saving.more}
 # use st_write(<variable name>, <file path.shp>)
 # add your code here
+st_write(nc_watersheds_join, here("outputs", "nc_watersheds.shp"))
 ```
 
 # 5. EXTRA FEATURES & RESOURCES
