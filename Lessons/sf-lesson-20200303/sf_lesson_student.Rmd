@@ -407,6 +407,7 @@ my_epsg <- 5070
 # basins
 basins_nf_seplains <- basins_nf_seplains_raw
 st_crs(basins_nf_seplains) <- my_proj4
+
 basins_nf_seplains <- basins_nf_seplains %>%
   st_set_crs(my_epsg)
 st_crs(basins_nf_seplains)
@@ -660,6 +661,15 @@ ggplot(data = nc_basins_nf_seplains) +
   geom_sf() +
   theme_classic()
 dev.off()
+
+#From answer key:
+pdf(here("outputs", "spatial_operations_test_fig.pdf"), width = 11, height = 8.5)
+ggplot() +
+  geom_sf(data = nc_state_bounds_geom, fill = NA) +
+  geom_sf(data = nc_basins_nf_seplains, alpha = 0.25) +
+  geom_sf(data = nc_gages, lwd = 1) +
+  theme_bw()
+dev.off()
 ```
 
 Notice a few things about Figure 1a: (1) the watersheds are nested (there are smaller ones inside bigger ones), (2) the larger watersheds are cut by the NC state boundaries, and (3) there are some gages that are outside the watershed bounds (i.e., we don't have watershed basins or tabular data for them).
@@ -728,7 +738,8 @@ Can you reproduce Figure 1b?
 ```{r activity.reproducing.figure1b}
 # select NC
 # add your code here
-southeast_state_bounds_NC<- southeast_state_bounds %>%
+
+southeast_state_bounds_NC <- southeast_state_bounds %>%
   filter(NAME == "North Carolina") %>%
   st_geometry()
 
@@ -736,62 +747,148 @@ southeast_state_bounds_NC<- southeast_state_bounds %>%
 # find watersheds that overlap with NC (want the whole watershed, not just the part of the watershe that's inside the NC bounds)
 # add your code here
 
-nc_basins_nf_seplains <- st_intersection(southeast_state_bounds_NC, basins_nf_seplains)
-
-#######Attempting to obtain full watersheds that overlap with NC
-
-nc_basins_nf_seplains <- st_contains(basins_nf_seplains, southeast_state_bounds_NC)
-
-st_as_sf(nc_basins_nf_seplains)
+nc_basins_nf_seplains_overlap <- st_overlaps(southeast_state_bounds_NC, basins_nf_seplains, sparse = FALSE, prepared = TRUE)
 
 # look at result
 # add your code here
-basins_nf_seplains_geom <- st_geometry(basins_nf_seplains)
-
-###Trying to see what the original watersheds look like -- it worked, just took awhile
-pdf(here("outputs", "nc_watersheds_only_test.pdf"), width = 11, height = 8.5)
-ggplot(data = basins_nf_seplains_geom) +
-  geom_sf()
-  dev.off()
-
-pdf(here("outputs", "nc_watersheds_test.pdf"), width = 11, height = 8.5)
-ggplot(data = nc_basins_nf_seplains) +
-  geom_sf()
-  dev.off()
+head(nc_basins_nf_seplains_overlap)
 
 # make a function to convert binary to logic
 # add your code here
+##[Done within st_overlaps]
 
 # map function on data and select only true values
 # add your code here
+nc_basins_overlap_mutated <- nc_basins_nf_seplains_overlap %>%
+  t() %>%
+  as.data.frame() %>%
+  mutate(Value = 1:1232)
+
+basins_mutated <- mutate(basins_nf_seplains, Value = 1:1232)
+  
+nc_basins_overlap <- full_join(nc_basins_overlap_mutated, basins_mutated)
 
 # look at result
 # add your code here
+head(nc_basins_overlap)
 
 # use nc_basins_overlap_logic to select only watersheds that overlap
 # add your code here
+nc_basins_overlap_logic <- filter(nc_basins_overlap, V1 == "TRUE")
+nc_basins_overlap_logic <- st_as_sf(nc_basins_overlap_logic, sf_column_name = "geometry")
 
 # check class
 # add your code here
+class(nc_basins_overlap_logic)
 
 # select Southeast gages only
 # add your code here
 # stretch break...this might take a while to run
+##Not doing this...found using the whole gages data set was easier
 
 # use nc_basins_overlap_sel to find gages inside
 # add your code here
 # stretch break...this might take a while to run
 
+#Merging all watershed polygons into one
+COMBINED_nc_basins_overlap_logic <- st_union(nc_basins_overlap_logic)
+
+#Checking and transforming coordinate systems
+st_crs(COMBINED_nc_basins_overlap_logic)
+st_crs(gages)
+
+gages_4326 <- gages %>%
+  st_transform(my_epsg_2)
+
+#COMBINED_nc_basins_overlap_logic <- st_buffer(COMBINED_nc_basins_overlap_logic, 0)
+
+#gages_southeast <- st_buffer(gages_southeast, 0)
+
+#Checking validity of datasets
+st_is_valid(gages)
+st_is_valid(COMBINED_nc_basins_overlap_logic)
+
+nc_gages_intersect <- st_intersection(gages_4326, COMBINED_nc_basins_overlap_logic)
+
+#nc_gages_overlap_sel_NA <- na_if(nc_gages_overlap_sel[1:998], "FALSE")
+
+#nc_gages_overlap_mutated <- nc_gages_overlap_sel %>%
+  #t() %>%
+  #as.data.frame() %>%
+  #gather()  %>%
+  #mutate(Value = 1:998)
+  
+#gages_southeast_mutated <- mutate(gages_southeast, Value = 1:998)
+  
+#nc_gages_overlap <- full_join(nc_gages_overlap_mutated, gages_southeast_mutated)
+
 # convert all to WGS84
 # add your code here
+
+my_epsg_2 <- 4326
+
+nc_gages_intersect <- nc_gages_intersect %>%
+  st_transform(my_epsg_2)
+st_crs(nc_gages_intersect)
+
+nc_basins_overlap_logic <- nc_basins_overlap_logic %>%
+  st_transform(my_epsg_2)
+st_crs(nc_basins_overlap_logic)
 
 # plot figure 1b
 # add your code here
 pdf(here("outputs", "figure_1b.pdf"), width = 11, height = 8.5)
 # add your code here
+ggmap(nc_basemap) +
+  geom_sf(data = nc_state_bounds_geom_wsg84, color = "black", 
+          lwd = 1, fill = NA, inherit.aes = FALSE) +
+  geom_sf(data = nc_basins_overlap_logic, color = "black", 
+          alpha = 0.25, inherit.aes = FALSE) +
+  geom_sf(data = nc_gages_intersect_2, inherit.aes = FALSE)
 dev.off()
 ```
 
+```{r miscellaneous plots}
+###[[[Trying to see what the original watersheds and states look like -- it worked, just took awhile]]
+pdf(here("outputs", "merged_watersheds_test.pdf"), width = 11, height = 8.5)
+ggplot() +
+  geom_sf(data = COMBINED_nc_basins_overlap_logic)
+  dev.off()
+  
+pdf(here("outputs", "se_gages_test.pdf"), width = 11, height = 8.5)
+ggplot() +
+  geom_sf(data = gages_southeast)
+  dev.off()
+
+pdf(here("outputs", "nc_watersheds_only_test.pdf"), width = 11, height = 8.5)
+ggplot(data = basins_nf_seplains_geom) +
+  geom_sf() +
+  dev.off()
+  
+pdf(here("outputs", "nc_watersheds_only_test.pdf"), width = 11, height = 8.5)
+ggplot(data = basins_nf_seplains_geom) +
+  geom_sf()
+  dev.off()
+  
+pdf(here("outputs", "nc_watersheds_states_test.pdf"), width = 11, height = 8.5)
+ggplot(southeast_state_bounds, aes()) +
+  geom_sf(color = "black") +
+  geom_sf(data = basins_nf_seplains_geom, color = "blue", alpha = 0.25) +
+  theme_bw()
+  dev.off()
+  
+#Example from using ggmap above
+pdf(here("outputs", "nc_with_basemap.pdf"), width = 11, height = 8.5)
+ggmap(nc_basemap) +
+  geom_sf(data = nc_state_bounds_geom_wsg84, fill = NA, lwd = 1, inherit.aes = FALSE)
+dev.off()
+
+pdf(here("outputs", "nc_basins_overlap.pdf"), width = 11, height = 8.5)
+ggplot(data = nc_basins_overlap_logic) +
+  geom_sf()
+  dev.off()
+
+```
 ### 3.3 Mixing Spatial and Tabular Data
 
 The sf and tidyverse packages work together very well to wrangle spatial and tabular data. You may have noticed that some of the code above uses the pipe operator (i.e., %>%) to link together analysis steps. Some of the dplyr verbs will also work with sf objects See [here](https://r-spatial.github.io/sf/reference/tidyverse.html) for more info on these verbs.
@@ -879,6 +976,32 @@ ggplot(data = nc_watersheds_join, aes(fill = WD_BASIN)) +
   geom_sf(data = nc_state_bounds_geom, fill = NA) +
   scale_fill_gradient(low = "white", high = "blue") +
   labs(fill = "Watershed Avg. Annual # Days with Precipitation") +
+  theme_bw()
+dev.off()
+```
+
+######HOMEWORK ASSIGNMENT 9######
+2. Create a new map that mixes spatial and tabular data, as in section 3.3 of the spatial lesson. You may use the maps created in the lesson as an example, but your map should contain data other than precipitation days per year. This map should include: 
+
+* State boundary layer
+* Basin boundary layer
+* Gage layer
+* Tabular data (as an aesthetic for one of the layers)
+
+Questions:
+Do we need other map elements?
+Overlapping?
+
+```{r assignment 9}
+pdf(here("outputs", "Mullaney_A09_Spatial.pdf"), width = 11, height = 8.5)
+ggplot() +
+  geom_sf(data = nc_watersheds_join, aes(fill = PPTAVG_BASIN), color = "black", alpha = 0.5) +
+  geom_sf(data = nc_state_bounds_geom, fill = NA, 
+          color = "black") +
+  geom_sf(data = nc_gages) +
+  scale_fill_viridis_c(option = "plasma", direction = -1) +
+  #scale_fill_gradient(low = "white", high = "blue") +
+  labs(fill = "Mean annual precipitation (cm)") +
   theme_bw()
 dev.off()
 ```
