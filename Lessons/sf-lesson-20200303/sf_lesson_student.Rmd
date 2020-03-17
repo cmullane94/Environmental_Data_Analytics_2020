@@ -837,7 +837,7 @@ st_crs(nc_basins_overlap_logic)
 
 # plot figure 1b
 # add your code here
-pdf(here("outputs", "figure_1b.pdf"), width = 11, height = 8.5)
+pdf(here("outputs", "Mullaney_A09_spatial_figure_1b.pdf"), width = 11, height = 8.5)
 # add your code here
 ggmap(nc_basemap) +
   geom_sf(data = nc_state_bounds_geom_wsg84, color = "black", 
@@ -992,8 +992,8 @@ Questions:
 Do we need other map elements?
 Overlapping?
 
-```{r assignment 9}
-pdf(here("outputs", "Mullaney_A09_Spatial.pdf"), width = 11, height = 8.5)
+```{r assignment 9, option 1}
+pdf(here("outputs", "Mullaney_A09_Spatial_Option_1.pdf"), width = 11, height = 8.5)
 ggplot() +
   geom_sf(data = nc_watersheds_join, aes(fill = PPTAVG_BASIN), color = "black", alpha = 0.5) +
   geom_sf(data = nc_state_bounds_geom, fill = NA, 
