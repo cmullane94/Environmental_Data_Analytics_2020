@@ -837,14 +837,15 @@ st_crs(nc_basins_overlap_logic)
 
 # plot figure 1b
 # add your code here
-pdf(here("outputs", "Mullaney_A09_spatial_figure_1b.pdf"), width = 11, height = 8.5)
+pdf(here("outputs", "Mullaney_A09_Spatial.pdf"), width = 11, height = 8.5)
 # add your code here
 ggmap(nc_basemap) +
   geom_sf(data = nc_state_bounds_geom_wsg84, color = "black", 
           lwd = 1, fill = NA, inherit.aes = FALSE) +
   geom_sf(data = nc_basins_overlap_logic, color = "black", 
           alpha = 0.25, inherit.aes = FALSE) +
-  geom_sf(data = nc_gages_intersect_2, inherit.aes = FALSE)
+  geom_sf(data = nc_gages_intersect_2, inherit.aes = FALSE) +
+  labs(x = "Longitude", y = "Latitude")
 dev.off()
 ```
 
