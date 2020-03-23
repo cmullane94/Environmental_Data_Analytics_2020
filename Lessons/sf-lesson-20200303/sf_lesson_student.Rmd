@@ -686,7 +686,7 @@ nc_state_bounds_geom <- southeast_state_bounds %>%
 
 # get data bounding box
 nc_bbox <- nc_state_bounds_geom %>%
-  st_buffer(dist = 150000) %>% # this value is very arbitrary just wanting to make a large buffer around geometry
+  st_buffer(dist = 170000) %>% # this value is very arbitrary just wanting to make a large buffer around geometry
   st_transform(4326) %>% # WGS84 (for lat and long)
   st_bbox() #Returns the bounding of a simple feature/simple feature set
 nc_bbox # check
@@ -699,7 +699,7 @@ nc_bbox_fix
 
 # get basemap
 #get_map is a smart wrapper that queries the Google Maps, OpenStreetMap, Stamen Maps or Naver Map servers for a map
-nc_basemap <- get_map(nc_bbox_fix, maptype = 'terrain-background', source = 'stamen', zoom = 8)
+nc_basemap <- get_map(nc_bbox_fix, maptype = 'terrain-background', source = 'stamen', zoom = 7)
 class(nc_basemap)
 st_crs(nc_basemap)
 # you'll have to trust me that this will have a CRS = WGS84
