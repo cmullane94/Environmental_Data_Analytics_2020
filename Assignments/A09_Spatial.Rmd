@@ -13,6 +13,7 @@ This exercise accompanies the lessons in Environmental Data Analytics on spatial
 
 ## Directions
 1. Use this document to create code for a map. You will **NOT** be turning in the knitted Rmd file this time, only the pdf output for a map.
+**My code is in the sf_lesson_student.Rmd document in section 3.2.2**
 2. When you have produced your output, submit **only** the pdf file for the map, without any code. Please name your file "StudentName_A09_Spatial.pdf".
 
 The completed exercise is due on Thursday, March 19 at 1:00 pm.
