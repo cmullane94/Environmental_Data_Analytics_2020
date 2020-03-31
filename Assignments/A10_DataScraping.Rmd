@@ -130,7 +130,8 @@ Lakes.Impaired.percent.TMDL <- webpage %>%
   html_text()
 
 Lakes <- data.frame(State, Lakes.Assessed.acres, Lakes.Assessed.percent, 
-                    Lakes.Impaired.acres, Lakes.Impaired.percent, Lakes.Impaired.percent.TMDL)
+                    Lakes.Impaired.acres, Lakes.Impaired.percent, 
+                    Lakes.Impaired.percent.TMDL)
 ```
 
 7. Filter out the states with no data. 
@@ -163,7 +164,6 @@ Lakes$Lakes.Impaired.percent.TMDL <- str_replace(Lakes$Lakes.Impaired.percent.TM
                                                    pattern = "([±])", replacement = "")
 
 # 9
-
 str(Lakes)
 
 Lakes$Lakes.Assessed.acres <- as.numeric(Lakes$Lakes.Assessed.acres)
@@ -192,14 +192,31 @@ Rivers_Lakes_boxplot <- Rivers_Lakes %>%
   rename(Rivers = Rivers.Impaired.percent, Lakes = Lakes.Impaired.percent) %>%
   gather(Feature, Impaired.percent, -State)
 
+# Set theme
+mytheme <- theme_classic() +
+  theme(axis.text = element_text(color = "black"), 
+        legend.position = "top")
+theme_set(mytheme)
+
+#Make plot
 rivers_lakes_box <- ggplot(Rivers_Lakes_boxplot, 
                    aes(y = Impaired.percent, x = as.factor(Feature))) +
   geom_boxplot() + 
-  labs(y = "% Impaired", x = "Feature")
+  labs(y = "% Impaired, by US State", x = "Feature") +
+  ylim(0, 100)
 
 print(rivers_lakes_box)
+
+#Calculations to aid in interpretation
+summary(Rivers_Lakes$Rivers.Impaired.percent)
+summary(Rivers_Lakes$Lakes.Impaired.percent, na.rm=TRUE)
+
+var.test(Rivers_Lakes_boxplot$Impaired.percent ~ as.factor(Rivers_Lakes_boxplot $Feature))
+
+t.test(Rivers_Lakes_boxplot$Impaired.percent ~ 
+         as.factor(Rivers_Lakes_boxplot $Feature), var.equal = FALSE)
 ```
 
 12. Summarize the findings that accompany your graph. You may choose to suggest further research or data collection to help explain the results.
 
->
+>A boxplot comparing percentages of lakes and rivers impaired in states across the US shows that there is a greater median percentage of impaired lakes (18.5%) than impaired rivers (9.5%). The distributions of impaired percentages for both features are positively skewed, but the rivers data is less spread out, with a smaller IQR than the lakes data. These features of the boxplot suggest that the state percentages of impaired lakes range more widely than those of impaired rivers and that, overall, there are greater percentages of impaired lakes than rivers. A t-test confirms that the average percentage of impaired lakes is significantly greater than the average percentage of impaired rivers in US states (t = 2.182, df = 84.3, p < 0.05), indicating that US lakes may often need to be prioritized in nutrient-related preservation and restoration efforts.
