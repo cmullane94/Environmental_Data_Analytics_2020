@@ -34,6 +34,12 @@ getwd()
 
 library(tidyverse)
 library(rvest)
+
+# Set theme
+ggtheme <- theme_classic(base_size = 14) + 
+  theme(axis.text = element_text(color = "black"),
+        legend.position = "right")
+theme_set(ggtheme)
 ```
 
 2. Indicate the EPA impaired waters website (https://www.epa.gov/nutrient-policy-data/waters-assessed-impaired-due-nutrient-related-causes) as the URL to be scraped. 
@@ -191,12 +197,6 @@ Rivers_Lakes_boxplot <- Rivers_Lakes %>%
   select(State, Rivers.Impaired.percent, Lakes.Impaired.percent) %>% 
   rename(Rivers = Rivers.Impaired.percent, Lakes = Lakes.Impaired.percent) %>%
   gather(Feature, Impaired.percent, -State)
-
-# Set theme
-mytheme <- theme_classic() +
-  theme(axis.text = element_text(color = "black"), 
-        legend.position = "top")
-theme_set(mytheme)
 
 #Make plot
 rivers_lakes_box <- ggplot(Rivers_Lakes_boxplot, 
