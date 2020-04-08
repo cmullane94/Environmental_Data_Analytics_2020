@@ -20,10 +20,16 @@ editor_options:
     + YAML templates include options for html, pdf, word, markdown, and interactive
     + More information on formatting the YAML header can be found in the cheat sheet
 2. **R Code Chunks** surrounded by ``` on top and bottom
-    + Create using `Cmd/Ctrl` + `Alt` + `I`
+    + Create using `Cmd/Ctrl` + `option/Alt` + `I`
     + Can be named {r name} to facilitate navigation and autoreferencing
     + Chunk options allow for flexibility when the code runs and when the document is knitted
 3. **Text** with formatting options for readability in knitted document
+
+```{r}
+
+
+```
+
 
 A handy cheat sheet for R markdown can be found [here](https://www.rstudio.com/wp-content/uploads/2015/03/rmarkdown-reference.pdf). Another one can be found [here](https://www.rstudio.com/wp-content/uploads/2015/02/rmarkdown-cheatsheet.pdf).
 
@@ -31,14 +37,30 @@ A handy cheat sheet for R markdown can be found [here](https://www.rstudio.com/w
 
 <Fill in our discussion below with bullet points. Use italics and bold for emphasis (hint: use the cheat sheets to figure out how to make bold and italic text).>
 
+* *italic*
+* **bold**
+
 ## TEXT EDITING CHALLENGE
 
 Create a table below that details the example datasets we have been using in class. The first column should contain the names of the datasets and the second column should include some relevant information about the datasets. (Hint: use the cheat sheets to figure out how to make a table in Rmd)
 
+Dataset | Description
+------- | -----------
+USGS_Site_02085000_Flow_Raw | The dataset contains streamflow data from the USGS streamflow gage site 02085000 (Eno River at Hillsborough, NC). 
+Ozone_TimeSeries | EPA air ozone data.
+NTL-LTER_Lake | Data on dissolved organic and inorganic carbon, particulate organic matter, partial pressure of CO2 and absorbance at 440nm.
+NEON_NIWO_Litter | The dataset contains data from monitoring at the Niwot Ridge Long-Term Ecological Research (LTER) station, comprising trap data for litter and small woody debris 2016-2019.
+EPAair_PM25 | The dataset contains data from air quality monitoring of PM2.5 in North Carolina in 2017 and 2018.
+EPAaire_O3 | The dataset contains data from air quality monitoring of ozone in North Carolina in 2017 and 2018.
+ECOTOX_Neonicotinoids_Insects | The dataset contains data from studies on several neonicotinoids and their effects insects.
 
 ## R CHUNK EDITING CHALLENGE
 ### Installing packages
 Create an R chunk below that installs the package `knitr`. Instead of commenting out the code, customize the chunk options such that the code is not evaluated (i.e., not run). 
+
+```{r eval = FALSE}
+install.packages("knitr")
+```
 
 
 ### Setup
@@ -48,6 +70,23 @@ Load the NTL-LTER_Lake_Nutrients_Raw dataset, display the head of the dataset, a
 
 Customize the chunk options such that the code is run but is not displayed in the final document.
 
+```{r setup, message = FALSE, include = FALSE}
+getwd()
+library(tidyverse)
+library(knitr)
+
+ggtheme <- theme_classic(base_size = 14) + 
+  theme(axis.text = element_text(color = "black"),
+        legend.position = "right")
+theme_set(ggtheme)
+
+NTLLTER <- read.csv("./Data/Raw/NTL-LTER_Lake_Nutrients_Raw.csv")
+
+head(NTLLTER)
+
+NTLLTER$sampledate <- as.Date(NTLLTER$sampledate, format = "%m/%d/%y")
+```
+
 
 ### Data Exploration, Wrangling, and Visualization
 Create an R chunk below to create a processed dataset do the following operations: 
@@ -55,23 +94,74 @@ Create an R chunk below to create a processed dataset do the following operation
 * Include all columns except lakeid, depth_id, and comments
 * Include only surface samples (depth = 0 m)
 
+```{r Data Wrangling}
+NTLLTER_processed <- NTLLTER %>%
+  select(lakename:sampledate, depth:po4) %>%
+  filter(depth == 0)
+```
 
 Create a second R chunk to create a summary dataset with the mean, minimum, maximum, and standard deviation of total nitrogen concentrations for each lake. Create a second summary dataset that is identical except that it evaluates total phosphorus. Customize the chunk options such that the code is run but not displayed in the final document. 
 
+```{r Summary Datasets, include = FALSE}
+NTLLTER_tn_summary <- NTLLTER_processed %>%
+  group_by(lakename) %>%
+  summarise(mean_tn_ug = mean(tn_ug, na.rm = TRUE),
+            min_tn_ug = min(tn_ug, na.rm = TRUE),
+            max_tn_ug = max(tn_ug, na.rm = TRUE),
+            sd_tn_ug = sd(tn_ug, na.rm = TRUE))
+
+NTLLTER_tp_summary <- NTLLTER_processed %>%
+  group_by(lakename) %>%
+  summarise(mean_tp_ug = mean(tp_ug, na.rm = TRUE),
+            min_tp_ug = min(tp_ug, na.rm = TRUE),
+            max_tp_ug = max(tp_ug, na.rm = TRUE),
+            sd_tp_ug = sd(tp_ug, na.rm = TRUE))
+```
 
 Create a third R chunk that uses the function `kable` in the knitr package to display two tables: one for the summary dataframe for total N and one for the summary dataframe of total P. Use the `caption = " "` code within that function to title your tables. Customize the chunk options such that the final table is displayed but not the code used to generate the table. 
 
+```{r Tables, echo = FALSE}
+
+kable(NTLLTER_tn_summary, caption = "Total Nitrogen Summary Statistics from Lakes in the North Temperate Lakes District, Wisconsin, USA")
+
+kable(NTLLTER_tp_summary, caption = "Total Phosphorus Summary Statistics from Lakes in the North Temperate Lakes District, Wisconsin, USA")
+```
+
 
 Create a fourth and fifth R chunk that generates two plots (one in each chunk): one for total N over time with different colors for each lake, and one with the same setup but for total P. Decide which geom option will be appropriate for your purpose, and select a color palette that is visually pleasing and accessible. Customize the chunk options such that the final figures are displayed but not the code used to generate the figures. In addition, customize the chunk options such that the figures are aligned on the left side of the page. Lastly, add a fig.cap chunk option to add a caption (title) to your plot that will display underneath the figure.
+
+```{r TN Plot, echo = FALSE, fig.align = left, fig.cap = Total nitrogen levels over time of lakes in the North Temperate Lakes District, Wisconsin, USA}
+
+tn_plot <- ggplot(NTLLTER_processed, 
+                  aes(x = sampledate, y = tn_ug, 
+                      color = lakename)) +
+  geom_point() +
+  scale_colour_viridis_d() +
+  labs(y = expression(paste("TN ( ", mu, "g/L)")), x = "Sample Date", color = "")
+print(tn_plot)
+
+```
+
+```{r TP Plot, echo = FALSE, fig.align = left, fig.cap = Total phosphorus levels over time of lakes in the North Temperate Lakes District, Wisconsin, USA}
+tp_plot <- ggplot(NTLLTER_processed, 
+                  aes(x = sampledate, y = tp_ug, 
+                      color = lakename)) +
+  geom_point() +
+  scale_colour_viridis_d() +
+  labs(y = expression(paste("TP ( ", mu, "g/L)")), x = "Sample Date", color = "")
+print(tp_plot)
+```
 
 
 ### Other options
 What are the chunk options that will suppress the display of errors, warnings, and messages in the final document? 
 
-> ANSWER: 
+> ANSWER: `error = FALSE`, `warning = FALSE`, and `message = FALSE`
 
 ### Communicating results
 Write a paragraph describing your findings from the R coding challenge above. This should be geared toward an educated audience but one that is not necessarily familiar with the dataset. Then insert a horizontal rule below the paragraph. Below the horizontal rule, write another paragraph describing the next steps you might take in analyzing this dataset. What questions might you be able to answer, and what analyses would you conduct to answer those questions?
+
+***
 
 ## KNIT YOUR PDF
 When you have completed the above steps, try knitting your PDF to see if all of the formatting options you specified turned out as planned. This may take some troubleshooting. 
