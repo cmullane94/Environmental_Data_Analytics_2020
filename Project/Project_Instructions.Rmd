@@ -8,7 +8,7 @@ geometry: margin=2.54cm
 
 ## CREATE A REPOSITORY IN YOUR GITHUB ACCOUNT
 
-1. Make sure you have completed the necessary software installations of: 
+-- 1. Make sure you have completed the necessary software installations of: 
 
 **R**
 
@@ -18,19 +18,19 @@ geometry: margin=2.54cm
 
 **LaTeX**
 
-2. Go to your user account on GitHub. 
+-- 2. Go to your user account on GitHub. 
 
-3. In the upper right corner, click the green "New" button. 
+-- 3. In the upper right corner, click the green "New" button. 
 
-4. Name your repository with recommended naming conventions. Write a short description of the purpose of the repository. Check the box to initialize the repository with a README. Add a .gitignore for R and add a GNU General Public License v3.0.
+-- 4. Name your repository with recommended naming conventions. Write a short description of the purpose of the repository. Check the box to initialize the repository with a README. Add a .gitignore for R and add a GNU General Public License v3.0.
 
 ## LINK YOUR REPO TO YOUR LOCAL DRIVE WITH RSTUDIO
 
-1. Click the "Clone or download" button for your repository and then the "copy" icon. Make sure the box header lists "Clone with HTTPS" rather than "Clone with SSH." If not, click the "Use HTTPS" button and then copy the link.
+-- 1. Click the "Clone or download" button for your repository and then the "copy" icon. Make sure the box header lists "Clone with HTTPS" rather than "Clone with SSH." If not, click the "Use HTTPS" button and then copy the link.
 
-2. Launch RStudio and select "New Project" from the File menu. Choose "Version Control" and "Git."
+-- 2. Launch RStudio and select "New Project" from the File menu. Choose "Version Control" and "Git."
 
-3. Paste the repository URL and give your repository a name and a file path.
+-- 3. Paste the repository URL and give your repository a name and a file path.
 
 ## CHOOSE A DATASET AND A RESEARCH QUESTION
 
@@ -42,7 +42,7 @@ geometry: margin=2.54cm
 
 1. Populate your README with the necessary information for the project. This should include your name, information about the course project, and information about the topic of interest. 
 
-2. Create folders for Data/Raw, Data/Processed, Code, and Output.
+-- 2. Create folders for Data/Raw, Data/Processed, Code, and Output.
 
 3. (You will create a metadata file for the dataset as part of assignment 11, due March 31). 
 
